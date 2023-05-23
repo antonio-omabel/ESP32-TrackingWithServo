@@ -26,7 +26,8 @@ public class MyGyroscope  implements SensorEventListener {
             }
         }
         public void start(){
-            sensorManager.registerListener(this/*Usa se stessa come listener*/, gyroscope, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(this, gyroscope, SensorManager.SENSOR_STATUS_ACCURACY_HIGH);
+            sensorManager.registerListener(this, gyroscope, SensorManager.SENSOR_DELAY_NORMAL);
         }
 
         public void stop(){
