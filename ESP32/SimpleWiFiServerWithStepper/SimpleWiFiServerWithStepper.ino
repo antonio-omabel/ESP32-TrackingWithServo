@@ -30,6 +30,8 @@ const int stepsPerRevolution = 2048;  // change this to fit the number of steps 
 
 Stepper myStepper(stepsPerRevolution, IN1, IN3, IN2, IN4);
 
+void setDegreeMovement (float degree);
+
 const char* ssid     = "RedmiEma";
 const char* password = "APPAMIT0";
 
@@ -60,6 +62,15 @@ void setup()
     Serial.println("WiFi connected.");
     Serial.println("IP address: ");
     Serial.println(WiFi.localIP());
+
+    //Blink 3 times to signal wifi connection
+    for (int i=0; i<3; i++){
+      digitalWrite(2, HIGH);
+      delay(200);
+       digitalWrite(2, LOW);
+      delay(100);
+
+    }
     
     server.begin();
     myStepper.setSpeed(10);
