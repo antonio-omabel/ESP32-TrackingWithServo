@@ -8,12 +8,39 @@
     tools:context=".MainActivity">
 
     <LinearLayout
+        android:id="@+id/lCamera"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="4"
         android:background="#7bdff2"
-        android:gravity="top"
+        android:gravity="center"
         android:orientation="vertical">
+        <TextView
+            android:id="@+id/tvX"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:text="X:"
+            android:layout_marginTop="20dp"
+            />
+
+        <TextView
+            android:id="@+id/tvY"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:text="Y:"
+            android:layout_marginTop="20dp"
+            />
+
+        <TextView
+            android:id="@+id/tvZ"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:text="Z:"
+            android:layout_marginTop="20dp"
+            />
 
     </LinearLayout>
 
@@ -26,11 +53,30 @@
         android:orientation="vertical">
 
         <Button
+            android:id="@+id/bttStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start"
+            android:textSize="20dp"
+            android:layout_marginTop="20dp"
+            />
+
+        <Button
+            android:id="@+id/bttStop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Stop"
+            android:textSize="20dp"
+            android:layout_marginTop="20dp"
+            />
+
+        <Button
             android:id="@+id/bttRotateClockwise"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Rotate\nclockwise"
-            android:textSize="15dp">
+            android:textSize="15dp"
+            android:layout_marginTop="30dp">
 
         </Button>
 
@@ -39,7 +85,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Rotate\ncounter\nclockwise"
-            android:textSize="15dp"></Button>
+            android:textSize="15dp"
+            android:layout_marginTop="20dp">
+        </Button>
+
     </LinearLayout>
 
 </LinearLayout>
