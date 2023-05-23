@@ -105,12 +105,16 @@ void loop(){
           currentLine += c;      // add it to the end of the currentLine
         }
 
+        
+
+
+        
         // Check to see if the client request was "GET /H" or "GET /L":
         if (currentLine.endsWith("GET /H")) {
           digitalWrite(2, HIGH); // GET /H turns the LED on
           
           Serial.println("\nclockwise");
-          myStepper.step(stepsPerRevolution);
+          myStepper.step(512);
           delay(1000);
         
         }
@@ -118,11 +122,23 @@ void loop(){
           digitalWrite(2, LOW);                // GET /L turns the LED off
           
           Serial.println("\nclockwise");
-          myStepper.step(-stepsPerRevolution);
+          myStepper.step(-512);
+          delay(1000);
+        }
+        if (currentLine.endsWith("GET /8")) {
+          digitalWrite(2, LOW);                // GET /L turns the LED off
+          
+          
+          myStepper.step(-512);
           delay(1000);
         }
       }
     }
+    
+        Serial.println("\nInizio stringa intercettata: ");
+        String movValue = currentLine;
+        Serial.println(currentLine);
+        Serial.println("fine\n");
     // close the connection:
     client.stop();
     Serial.println("Client Disconnected.");
