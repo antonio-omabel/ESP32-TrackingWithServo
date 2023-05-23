@@ -13,22 +13,19 @@
  This example is written for a network using WPA2 encryption. For insecure
  WEP or WPA, change the Wifi.begin() call and use Wifi.setMinSecurity() accordingly.
 
+ Circuit:
+ * WiFi shield attached
+ * LED attached to pin 5
+
+ created for arduino 25 Nov 2012
+ by Tom Igoe
+
 ported for sparkfun esp32 
 31.01.2017 by Jan Hendrik Berlin
  
  */
-#include <Stepper.h>
+
 #include <WiFi.h>
-
-const int stepsPerRevolution = 2048;  // change this to fit the number of steps per revolution
-
-// ULN2003 Motor Driver Pins
-#define IN1 27
-#define IN2 13
-#define IN3 14
-#define IN4 12
-
-Stepper myStepper(stepsPerRevolution, IN1, IN3, IN2, IN4);
 
 const char* ssid     = "RedmiEma";
 const char* password = "APPAMIT0";
@@ -62,10 +59,6 @@ void setup()
     Serial.println(WiFi.localIP());
     
     server.begin();
-    myStepper.setSpeed(10);
-
-    // set the speed at 10 rpm
-  //myStepper.setSpeed(10);
 
 }
 
@@ -91,8 +84,8 @@ void loop(){
             client.println();
 
             // the content of the HTTP response follows the header:
-            client.print("Click <a href=\"/H\">here</a> to turn the LED on pin 2 on.<br>");
-            client.print("Click <a href=\"/L\">here</a> to turn the LED on pin 2 off.<br>");
+            client.print("Click <a href=\"/H\">here</a> to turn the LED on pin 5 on.<br>");
+            client.print("Click <a href=\"/L\">here</a> to turn the LED on pin 5 off.<br>");
 
             // The HTTP response ends with another blank line:
             client.println();
@@ -107,19 +100,10 @@ void loop(){
 
         // Check to see if the client request was "GET /H" or "GET /L":
         if (currentLine.endsWith("GET /H")) {
-          digitalWrite(2, HIGH); // GET /H turns the LED on
-          
-          Serial.println("\ncounterclockwise");
-          myStepper.step(-stepsPerRevolution);
-          delay(1000);
-        
+          digitalWrite(2, HIGH);               // GET /H turns the LED on
         }
         if (currentLine.endsWith("GET /L")) {
           digitalWrite(2, LOW);                // GET /L turns the LED off
-          
-          Serial.println("\nclockwise");
-          myStepper.step(stepsPerRevolution);
-          delay(1000);
         }
       }
     }

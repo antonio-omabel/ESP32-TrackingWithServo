@@ -109,8 +109,8 @@ void loop(){
         if (currentLine.endsWith("GET /H")) {
           digitalWrite(2, HIGH); // GET /H turns the LED on
           
-          Serial.println("\ncounterclockwise");
-          myStepper.step(-stepsPerRevolution);
+          Serial.println("\nclockwise");
+          myStepper.step(stepsPerRevolution);
           delay(1000);
         
         }
@@ -118,7 +118,7 @@ void loop(){
           digitalWrite(2, LOW);                // GET /L turns the LED off
           
           Serial.println("\nclockwise");
-          myStepper.step(stepsPerRevolution);
+          myStepper.step(-stepsPerRevolution);
           delay(1000);
         }
       }
