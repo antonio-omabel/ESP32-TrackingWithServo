@@ -11,7 +11,7 @@ package com.amit.esp32_trackingwithservoapp.Sensor;
 
 
         ///////Cambiare tutto "Gyroscope" in "RotactionVector"
-public class MyRotactionVector implements SensorEventListener {
+public class MyRotationVector implements SensorEventListener {
 
     private final String TAG = "MyGyroscope";
 
@@ -20,7 +20,7 @@ public class MyRotactionVector implements SensorEventListener {
 
     private IMyGyroscope iMyGyroscope = null;
 
-    public MyRotactionVector (Context context, IMyGyroscope iMyGyroscope) {
+    public MyRotationVector(Context context, IMyGyroscope iMyGyroscope) {
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         if(sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR)!=null){
             rotactionVector = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
