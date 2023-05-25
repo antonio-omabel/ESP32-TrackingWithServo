@@ -1,6 +1,5 @@
 package com.amit.esp32_trackingwithservoapp.Sensor;
 
-import static java.lang.Math.floor;
 import static java.lang.Math.round;
 
 import android.content.Context;
@@ -11,8 +10,6 @@ import android.hardware.SensorManager;
 import android.util.Log;
 
 import com.amit.esp32_trackingwithservoapp.Interfaces.IMyRotationVector;
-
-import java.text.DecimalFormat;
 
 public class MyRotationVector implements SensorEventListener {
 
@@ -43,7 +40,8 @@ public class MyRotationVector implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         Log.i(TAG, "onSensorChanged");
-        float horizontalValue = sensorEvent.values[1];
+        double horizontalValue = sensorEvent.values[0];
+
         /////////////////////////////Sistemare////////////////////////
         iMyRotationVector.onNewRotationVectorValuesAvaible(horizontalValue);
         Log.i(TAG, "Horizontal value: " + horizontalValue);

@@ -27,6 +27,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service android:name=".Services.MyBackgroundService"></service>
+
     </application>
     <uses-feature
         android:name="android.hardware.sensor.gyroscope"

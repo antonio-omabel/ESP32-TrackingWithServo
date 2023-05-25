@@ -20,7 +20,7 @@
             android:id="@+id/tvHorizontalValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="40dp"
+            android:textSize="15dp"
             android:text="Horizontal value:"
             android:layout_marginTop="20dp"
             />

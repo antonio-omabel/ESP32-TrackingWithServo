@@ -1,9 +1,8 @@
 package com.amit.esp32_trackingwithservoapp;
 
-import static java.lang.Math.floor;
-
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -11,6 +10,7 @@ import android.widget.TextView;
 
 import com.amit.esp32_trackingwithservoapp.Interfaces.IMyRotationVector;
 import com.amit.esp32_trackingwithservoapp.Sensor.MyRotationVector;
+import com.amit.esp32_trackingwithservoapp.Services.MyBackgroundService;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -48,13 +48,34 @@ public class MainActivity extends AppCompatActivity implements IMyRotationVector
             RotateFunction(counterclockwiseUrl);
         });
 
-        myRotationVector = new MyRotationVector(this, this);
+
+
+        StartBackgroundService();
+        StopBackgroundService();
+
+
+    }
+
+    private void StartBackgroundService() {
         bttStart.setOnClickListener((v)->{
             myRotationVector.start();
-        });
+            Log.i(TAG, "Start background service");
+            if(!MyBackgroundService.isRunning){
+                startService(new Intent(this, MyBackgroundService.class));
+            }
+            else{Log.i(TAG, "Background service already running");}
+            Log.i(TAG,"Rotation");
+            RotateFunction(clockwiseUrl);
+    });
 
+    }
+
+    private void StopBackgroundService() {
+        myRotationVector.stop();
         bttStop.setOnClickListener((v)->{
             myRotationVector.stop();
+            Log.i(TAG, "Stop background service");
+            stopService(new Intent(this, MyBackgroundService.class));
         });
     }
 
@@ -64,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements IMyRotationVector
         bttStart = findViewById(R.id.bttStart);
         bttStop = findViewById(R.id.bttStop);
         client = new OkHttpClient();
+        myRotationVector = new MyRotationVector(this, this);
         tvHorizontalValue = findViewById(R.id.tvHorizontalValue);
     }
 
@@ -87,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements IMyRotationVector
     }
 
     @Override
-    public void onNewRotationVectorValuesAvaible(float x) {
+    public void onNewRotationVectorValuesAvaible(double x) {
         tvHorizontalValue.setText("Horizontal value: " + x);
     }
 }
