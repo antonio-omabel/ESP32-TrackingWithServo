@@ -110,6 +110,6 @@ public class MainActivity extends AppCompatActivity implements IMyRotationVector
 
     @Override
     public void onNewRotationVectorValuesAvaible(double x) {
-        tvHorizontalValue.setText("Horizontal value: " + x);
+        tvHorizontalValue.setText("Horizontal value: \n" + x);
     }
 }
