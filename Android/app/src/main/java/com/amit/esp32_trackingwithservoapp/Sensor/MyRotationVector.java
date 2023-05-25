@@ -1,51 +1,52 @@
 package com.amit.esp32_trackingwithservoapp.Sensor;
 
-        import android.content.Context;
-        import android.hardware.Sensor;
-        import android.hardware.SensorEvent;
-        import android.hardware.SensorEventListener;
-        import android.hardware.SensorManager;
-        import android.util.Log;
+import static java.lang.Math.floor;
+import static java.lang.Math.round;
 
-        import com.amit.esp32_trackingwithservoapp.Interfaces.IMyGyroscope;
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.util.Log;
 
+import com.amit.esp32_trackingwithservoapp.Interfaces.IMyRotationVector;
 
-        ///////Cambiare tutto "Gyroscope" in "RotactionVector"
+import java.text.DecimalFormat;
+
 public class MyRotationVector implements SensorEventListener {
 
-    private final String TAG = "MyGyroscope";
+    private final String TAG = "MyRotationVector";
 
     private SensorManager sensorManager = null;
-    private Sensor rotactionVector = null;
+    private Sensor rotationVector = null;
 
-    private IMyGyroscope iMyGyroscope = null;
+    private IMyRotationVector iMyRotationVector = null;
 
-    public MyRotationVector(Context context, IMyGyroscope iMyGyroscope) {
+    public MyRotationVector(Context context, IMyRotationVector iMyRotationVector) {
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        if(sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR)!=null){
-            rotactionVector = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
-            this.iMyGyroscope=iMyGyroscope;
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR) != null) {
+            rotationVector = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
+            this.iMyRotationVector = iMyRotationVector;
         }
     }
-    public void start(){
-        sensorManager.registerListener(this, rotactionVector, SensorManager.SENSOR_STATUS_ACCURACY_HIGH);
-        sensorManager.registerListener(this, rotactionVector, SensorManager.SENSOR_DELAY_NORMAL);
+
+    public void start() {
+        sensorManager.registerListener(this, rotationVector, SensorManager.SENSOR_STATUS_ACCURACY_HIGH);
+        sensorManager.registerListener(this, rotationVector, SensorManager.SENSOR_DELAY_FASTEST);
     }
 
-    public void stop(){
+    public void stop() {
         sensorManager.unregisterListener(this);
     }
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         Log.i(TAG, "onSensorChanged");
-
-        float x = sensorEvent.values[0];
-        float y = sensorEvent.values[1];
-        float z = sensorEvent.values[2];
-
-        iMyGyroscope.onNewGyroscopeValuesAvaible(x,y,z);
-        Log.i(TAG, "\nX: " + x + "\nY: " + y + "\nZ: " + z);
+        float horizontalValue = sensorEvent.values[1];
+        /////////////////////////////Sistemare////////////////////////
+        iMyRotationVector.onNewRotationVectorValuesAvaible(horizontalValue);
+        Log.i(TAG, "Horizontal value: " + horizontalValue);
     }
 
     @Override

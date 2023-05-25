@@ -15,30 +15,13 @@
         android:background="#7bdff2"
         android:gravity="center"
         android:orientation="vertical">
-        <TextView
-            android:id="@+id/tvX"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20dp"
-            android:text="X:"
-            android:layout_marginTop="20dp"
-            />
 
         <TextView
-            android:id="@+id/tvY"
+            android:id="@+id/tvHorizontalValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
-            android:text="Y:"
-            android:layout_marginTop="20dp"
-            />
-
-        <TextView
-            android:id="@+id/tvZ"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20dp"
-            android:text="Z:"
+            android:textSize="40dp"
+            android:text="Horizontal value:"
             android:layout_marginTop="20dp"
             />
 

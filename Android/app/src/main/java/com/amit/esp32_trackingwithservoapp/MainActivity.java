@@ -1,5 +1,7 @@
 package com.amit.esp32_trackingwithservoapp;
 
+import static java.lang.Math.floor;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -7,16 +9,12 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
-/*import com.amit.esp32_trackingwithservoapp.Interfaces.IMyAccelerometer;
-import com.amit.esp32_trackingwithservoapp.Sensor.MyAccelerometer;*/
-
-import com.amit.esp32_trackingwithservoapp.Interfaces.IMyGyroscope;
-import com.amit.esp32_trackingwithservoapp.Sensor.MyGyroscope;
+import com.amit.esp32_trackingwithservoapp.Interfaces.IMyRotationVector;
+import com.amit.esp32_trackingwithservoapp.Sensor.MyRotationVector;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
-import java.sql.Array;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -24,15 +22,15 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity implements /*IMyAccelerometer,*/ IMyGyroscope {
+public class MainActivity extends AppCompatActivity implements IMyRotationVector {
     private String TAG = "MainActivity";
     private Button bttRotateClockwise=null, bttRotateCounterclockwise=null,bttStart = null, bttStop = null;;
-    private TextView tvX = null, tvY = null, tvZ = null;
+    private TextView tvHorizontalValue = null;
     private OkHttpClient client;
     private String clockwiseUrl = "http://192.168.43.147/H";
     private String counterclockwiseUrl = "http://192.168.43.147/L";
     /*private MyAccelerometer myAccelerometer = null;*/
-    private MyGyroscope myGyroscope = null;
+    private MyRotationVector myRotationVector = null;
     public MainActivity() throws MalformedURLException, UnsupportedEncodingException {
     }
 
@@ -49,21 +47,14 @@ public class MainActivity extends AppCompatActivity implements /*IMyAcceleromete
             Log.i(TAG, "Counterclockwise rotation");
             RotateFunction(counterclockwiseUrl);
         });
-        /*myAccelerometer = new MyAccelerometer(this, this);
+
+        myRotationVector = new MyRotationVector(this, this);
         bttStart.setOnClickListener((v)->{
-            myAccelerometer.start();
+            myRotationVector.start();
         });
 
         bttStop.setOnClickListener((v)->{
-            myAccelerometer.stop();
-        });*/
-        myGyroscope = new MyGyroscope(this, this);
-        bttStart.setOnClickListener((v)->{
-            myGyroscope.start();
-        });
-
-        bttStop.setOnClickListener((v)->{
-            myGyroscope.stop();
+            myRotationVector.stop();
         });
     }
 
@@ -73,24 +64,9 @@ public class MainActivity extends AppCompatActivity implements /*IMyAcceleromete
         bttStart = findViewById(R.id.bttStart);
         bttStop = findViewById(R.id.bttStop);
         client = new OkHttpClient();
-        tvX = findViewById(R.id.tvX);
-        tvY = findViewById(R.id.tvY);
-        tvZ = findViewById(R.id.tvZ);
+        tvHorizontalValue = findViewById(R.id.tvHorizontalValue);
     }
 
-    /*@Override
-    public void onNewAccelerometerValuesAvaible(float x, float y, float z) {
-        tvX.setText("X: " + x);
-        tvY.setText("Y: " + y);
-        tvZ.setText("Z: " + z);
-    }*/
-
-    @Override
-    public void onNewGyroscopeValuesAvaible(float x, float y, float z) {
-        tvX.setText("X: " + x);
-        tvY.setText("Y: " + y);
-        tvZ.setText("Z: " + z);
-    }
     private void RotateFunction(String directionUrl){
         Log.i(TAG, "RotateFunction");
         Request request = new Request.Builder()
@@ -108,5 +84,10 @@ public class MainActivity extends AppCompatActivity implements /*IMyAcceleromete
                 else{Log.i(TAG,"Http request onResponse fail");}
             }
         });
+    }
+
+    @Override
+    public void onNewRotationVectorValuesAvaible(float x) {
+        tvHorizontalValue.setText("Horizontal value: " + x);
     }
 }
