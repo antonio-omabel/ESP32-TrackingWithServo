@@ -125,7 +125,7 @@ void loop(){
           digitalWrite(2, HIGH); // GET /H turns the LED on
           
           Serial.println("\nclockwise");
-          myStepper.step(512);
+          moveInDegrees(360);
           delay(1000);
         
         }
@@ -133,14 +133,16 @@ void loop(){
           digitalWrite(2, LOW);                // GET /L turns the LED off
           
           Serial.println("\nclockwise");
-          myStepper.step(-512);
+          moveInDegrees(-360);
+
+          //myStepper.step(-512);
           delay(1000);
         }
         if (currentLine.endsWith("GET /8")) {
           digitalWrite(2, LOW);                // GET /L turns the LED off
           
-          
-          myStepper.step(-512);
+          moveInDegrees(180);
+          //myStepper.step(-512);
           delay(1000);
         }
       }
@@ -154,4 +156,9 @@ void loop(){
     client.stop();
     Serial.println("Client Disconnected.");
   }
+}
+
+void moveInDegrees (int degrees){
+  int steps= (degrees*stepsPerRevolution)/360;
+  myStepper.step(steps);
 }
