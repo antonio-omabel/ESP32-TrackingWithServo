@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.amit.esp32_trackingwithservoapp.Interfaces.IMyRotationVector;
@@ -26,9 +27,12 @@ public class MainActivity extends AppCompatActivity implements IMyRotationVector
     private String TAG = "MainActivity";
     private Button bttRotateClockwise=null, bttRotateCounterclockwise=null,bttStart = null, bttStop = null;;
     private TextView tvHorizontalValue = null;
+    private EditText etIP = null;
     private OkHttpClient client;
-    private String clockwiseUrl = "http://192.168.43.147/H";
-    private String counterclockwiseUrl = "http://192.168.43.147/L";
+
+    //Hard coded strings only for testing purposes
+    private String clockwiseUrl = "http://192.168.43.147/get?data=90";
+    private String counterclockwiseUrl = "http://192.168.43.147/get?data=-90";
     /*private MyAccelerometer myAccelerometer = null;*/
     private MyRotationVector myRotationVector = null;
     public MainActivity() throws MalformedURLException, UnsupportedEncodingException {
@@ -39,9 +43,14 @@ public class MainActivity extends AppCompatActivity implements IMyRotationVector
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Init();
+
+        etIP =  findViewById(R.id.etIP);
+
+
         bttRotateClockwise.setOnClickListener((v) -> {
+            String iP = etIP.getText().toString();
             Log.i(TAG, "Clockwise rotation");
-            RotateFunction(clockwiseUrl);
+            RotateFunction(iP);
         });
         bttRotateCounterclockwise.setOnClickListener((v) -> {
             Log.i(TAG, "Counterclockwise rotation");
