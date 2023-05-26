@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="text"
-            android:text="http://192.168.43.147/get?data=809" />
+            android:text="http://192.168.43.147/get?data=-45" />
 
         <Space
             android:layout_width="match_parent"
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content">
 
             <EditText
-                android:id="@+id/ipPart1"
+                android:id="@+id/etIPPart1"
                 android:layout_width="72dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -64,7 +64,7 @@
                 android:text="." />
 
             <EditText
-                android:id="@+id/ipPart2"
+                android:id="@+id/etIPPart2"
                 android:layout_width="68dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -80,13 +80,13 @@
                 android:text="." />
 
             <EditText
-                android:id="@+id/ipPart3"
+                android:id="@+id/etIPPart3"
                 android:layout_width="86dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
                 android:inputType="text"
-                android:text="x" />
+                android:text="43" />
 
             <TextView
                 android:id="@+id/dot2"
@@ -96,13 +96,13 @@
                 android:text="." />
 
             <EditText
-                android:id="@+id/ipPart4"
+                android:id="@+id/etIPPart4"
                 android:layout_width="67dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
                 android:inputType="text"
-                android:text="x" />
+                android:text="147" />
 
         </LinearLayout>
 

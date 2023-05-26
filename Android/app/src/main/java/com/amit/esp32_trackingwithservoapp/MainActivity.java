@@ -25,9 +25,10 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity implements IMyRotationVector {
     private String TAG = "MainActivity";
-    private Button bttRotateClockwise=null, bttRotateCounterclockwise=null,bttStart = null, bttStop = null;;
+    private Button bttRotateClockwise=null, bttRotateCounterclockwise=null,bttStart = null,
+            bttStop = null, bttGO=null;;
     private TextView tvHorizontalValue = null;
-    private EditText etIP = null;
+    private EditText etIP = null,etIPpart1 = null, etIPpart2=null,etIPpart3=null,etIPpart4=null, etDegrees=null;
     private OkHttpClient client;
 
     //Hard coded strings only for testing purposes
@@ -45,7 +46,19 @@ public class MainActivity extends AppCompatActivity implements IMyRotationVector
         Init();
 
         etIP =  findViewById(R.id.etIP);
+        etIPpart1 =  findViewById(R.id.etIPPart1);
+        etIPpart2 =  findViewById(R.id.etIPPart2);
+        etIPpart3 =  findViewById(R.id.etIPPart3);
+        etIPpart4 =  findViewById(R.id.etIPPart4);
+        etDegrees = findViewById(R.id.etDegrees);
 
+
+        bttGO = findViewById(R.id.bttGo);
+        bttGO.setOnClickListener((v) -> {
+            String iP = "http://" + etIPpart1.getText().toString() + "." + etIPpart2.getText().toString() + "." + etIPpart3.getText().toString() + "." + etIPpart4.getText().toString() + "/get?data=" + etDegrees.getText().toString();
+            Log.i(TAG, "User Defined Rotation");
+            RotateFunction(iP);
+        });
 
         bttRotateClockwise.setOnClickListener((v) -> {
             String iP = etIP.getText().toString();
