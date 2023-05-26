@@ -3,8 +3,7 @@
 #include <WiFi.h>
 #include <WebServer.h>
 
-WiFiServer server(80);
-WebServer server2(80);
+WebServer server(80);
 
 const int stepsPerRevolution = 2048;  // change this to fit the number of steps per revolution
 
@@ -17,39 +16,49 @@ const int stepsPerRevolution = 2048;  // change this to fit the number of steps 
 #define IN3 14
 #define IN4 12
 
+
+//Stepper creation
 Stepper myStepper(stepsPerRevolution, IN1, IN3, IN2, IN4);
 
+//Converts desired degrees in steps depending on stepsPerRevolution
 void moveInDegrees (int degrees){
   int steps= (degrees*stepsPerRevolution)/360;
   myStepper.step(steps);
 }
+
+
+
 void handleRoot() {
-  server2.send(200, "text/plain", "Ready");
+  server.send(200, "text/plain", "Ready");
 }
 
+// Reads GET request, for example
 // write http://192.168.0.177/get?data=809 to have 809 degrees movement
 void handleGet() {
-  if (server2.hasArg("data")) {
-    String data = server2.arg("data");
+  if (server.hasArg("data")) {
+    String data = server.arg("data");
     Serial.println("Data: " + data);
+    //converts data received to int and moves motor
     int degrees = data.toInt();
     moveInDegrees(degrees);
+    //if data is a configuration text
+    if (data="CONFIG5") {myStepper.setSpeed(5);}
   }
-  server2.send(200, "text/plain", "Data Received");
+  server.send(200, "text/plain", "Data Received");
 }
 
 void handlePost() {
-  server2.send(200, "text/plain", "Processing Data");
+  server.send(200, "text/plain", "Processing Data");
 }
 
 void handleUpload() {
-  HTTPUpload& upload = server2.upload();
+  HTTPUpload& upload = server.upload();
   if (upload.status == UPLOAD_FILE_START) {
     Serial.println("Receiving data:");
   } else if (upload.status == UPLOAD_FILE_WRITE) {
     Serial.write(upload.buf, upload.currentSize);
   } else if (upload.status == UPLOAD_FILE_END) {
-    server2.send(200, "text/plain", "Data: ");
+    server.send(200, "text/plain", "Data: ");
   }
 }
 
@@ -89,18 +98,18 @@ void setup()
       delay(100);
 
     }
+   
     
-    //server.begin();
-    server2.on("/", handleRoot);
-    server2.on("/get", HTTP_GET, handleGet);
-    server2.on("/post", HTTP_POST, handlePost, handleUpload);
-    server2.begin();
+    server.on("/", handleRoot);
+    server.on("/get", HTTP_GET, handleGet);
+    server.on("/post", HTTP_POST, handlePost, handleUpload);
+    server.begin();
     myStepper.setSpeed(10);
 }
 
 void loop()
 {
-  server2.handleClient();
+  server.handleClient();
 }
 
 
