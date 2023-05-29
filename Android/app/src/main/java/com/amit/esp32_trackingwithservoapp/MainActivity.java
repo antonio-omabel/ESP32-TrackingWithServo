@@ -26,7 +26,7 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity implements IMyRotationVector {
     private String TAG = "MainActivity";
     private Button bttRotateClockwise=null, bttRotateCounterclockwise=null,bttStart = null,
-            bttStop = null, bttGO=null;;
+            bttStop = null, bttGO=null, bttSlowSpeed = null,bttNormalSpeed = null, bttFastSpeed=null;
     private TextView tvHorizontalValue = null;
     private EditText etIP = null,etIPpart1 = null, etIPpart2=null,etIPpart3=null,etIPpart4=null, etDegrees=null;
     private OkHttpClient client;
@@ -54,20 +54,34 @@ public class MainActivity extends AppCompatActivity implements IMyRotationVector
 
 
         bttGO = findViewById(R.id.bttGo);
+        bttSlowSpeed = findViewById(R.id.bttSlowSpeed);
+        bttNormalSpeed = findViewById(R.id.bttNormalSpeed);
+        bttFastSpeed = findViewById(R.id.bttFastSpeed);
+
         bttGO.setOnClickListener((v) -> {
-            String iP = "http://" + etIPpart1.getText().toString() + "." + etIPpart2.getText().toString() + "." + etIPpart3.getText().toString() + "." + etIPpart4.getText().toString() + "/get?data=" + etDegrees.getText().toString();
             Log.i(TAG, "User Defined Rotation");
-            RotateFunction(iP);
+            httpRequest(etDegrees.getText().toString());
         });
 
         bttRotateClockwise.setOnClickListener((v) -> {
-            String iP = etIP.getText().toString();
             Log.i(TAG, "Clockwise rotation");
-            RotateFunction(iP);
+            httpRequest("90");
         });
         bttRotateCounterclockwise.setOnClickListener((v) -> {
             Log.i(TAG, "Counterclockwise rotation");
-            RotateFunction(counterclockwiseUrl);
+            httpRequest("-90");
+        });
+        bttSlowSpeed.setOnClickListener((v) -> {
+            Log.i(TAG, "Change servo speed to Slow");
+            httpRequest("CONFIG3");
+        });
+        bttNormalSpeed.setOnClickListener((v) -> {
+            Log.i(TAG, "Change servo speed to Normal");
+            httpRequest("CONFIG5");
+        });
+        bttFastSpeed.setOnClickListener((v) -> {
+            Log.i(TAG, "Change servo speed to Fast");
+            httpRequest("CONFIG10");
         });
 
 
@@ -87,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements IMyRotationVector
             }
             else{Log.i(TAG, "Background service already running");}
             Log.i(TAG,"Rotation");
-            RotateFunction(clockwiseUrl);
+            httpRequest(clockwiseUrl);
     });
 
     }
@@ -111,10 +125,12 @@ public class MainActivity extends AppCompatActivity implements IMyRotationVector
         tvHorizontalValue = findViewById(R.id.tvHorizontalValue);
     }
 
-    private void RotateFunction(String directionUrl){
+
+    private void httpRequest(String data){
+        String url = getIP() + data;
         Log.i(TAG, "RotateFunction");
         Request request = new Request.Builder()
-                .url(directionUrl)
+                .url(url)
                 .build();
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -128,6 +144,14 @@ public class MainActivity extends AppCompatActivity implements IMyRotationVector
                 else{Log.i(TAG,"Http request onResponse fail");}
             }
         });
+    }
+
+
+
+    //Reads IP from the 4 edit text in the menu and returns it as a string
+    private String getIP (){
+        String iP = "http://" + etIPpart1.getText().toString() + "." + etIPpart2.getText().toString() + "." + etIPpart3.getText().toString() + "." + etIPpart4.getText().toString() + "/get?data=";
+        return iP;
     }
 
     @Override

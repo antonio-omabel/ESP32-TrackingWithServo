@@ -97,8 +97,8 @@
 
             <EditText
                 android:id="@+id/etIPPart4"
-                android:layout_width="67dp"
-                android:layout_height="wrap_content"
+                android:layout_width="62dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:ems="10"
                 android:inputType="text"
@@ -140,6 +140,43 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="GO" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="38dp" />
+
+        <TextView
+            android:id="@+id/textViewSpeed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Set Speed" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/bttSlowSpeed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Slow" />
+
+            <Button
+                android:id="@+id/bttNormalSpeed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Normal" />
+
+            <Button
+                android:id="@+id/bttFastSpeed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="fast" />
         </LinearLayout>
 
     </LinearLayout>
