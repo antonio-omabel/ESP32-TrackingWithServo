@@ -38,13 +38,21 @@ void handleGet() {
   if (server.hasArg("data")) {
     String data = server.arg("data");
     Serial.println("Data: " + data);
+
     //converts data received to int and moves motor
     int degrees = data.toInt();
     moveInDegrees(degrees);
-    //if data is a configuration text
-    if (data="CONFIG5") {myStepper.setSpeed(5);}
+    //if data is a configuration text, change motor speed accordingly
+    if (data="CONFIG3") {myStepper.setSpeed(3);
+    if (data="CONFIG5") {myStepper.setSpeed(5);
+    if (data="CONFIG10") {myStepper.setSpeed(10);
+    //TODO: if data is invalid (for motor) print error message
+    }
   }
+
+  //TODO: decide if other data type has to be printed or not
   server.send(200, "text/plain", "Data Received");
+
 }
 
 void handlePost() {
