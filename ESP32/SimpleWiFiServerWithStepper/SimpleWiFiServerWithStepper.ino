@@ -43,11 +43,11 @@ void handleGet() {
     int degrees = data.toInt();
     moveInDegrees(degrees);
     //if data is a configuration text, change motor speed accordingly
-    if (data="CONFIG3") {myStepper.setSpeed(3);
-    if (data="CONFIG5") {myStepper.setSpeed(5);
-    if (data="CONFIG10") {myStepper.setSpeed(10);
+    if (data=="CONFIG3") {myStepper.setSpeed(3);};
+    if (data=="CONFIG5") {myStepper.setSpeed(5);};
+    if (data=="CONFIG10") {myStepper.setSpeed(10);};
     //TODO: if data is invalid (for motor) print error message
-    }
+    
   }
 
   //TODO: decide if other data type has to be printed or not
@@ -112,7 +112,7 @@ void setup()
     server.on("/get", HTTP_GET, handleGet);
     server.on("/post", HTTP_POST, handlePost, handleUpload);
     server.begin();
-    myStepper.setSpeed(10);
+    myStepper.setSpeed(5);
 }
 
 void loop()

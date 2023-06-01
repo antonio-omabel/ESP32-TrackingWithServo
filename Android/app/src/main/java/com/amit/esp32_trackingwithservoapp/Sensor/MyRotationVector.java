@@ -43,7 +43,7 @@ public class MyRotationVector implements SensorEventListener {
         double horizontalValue = sensorEvent.values[0];
 
         /////////////////////////////Sistemare////////////////////////
-        iMyRotationVector.onNewRotationVectorValuesAvaible(horizontalValue);
+        iMyRotationVector.onNewRotationVectorValuesAvailable(horizontalValue);
         Log.i(TAG, "Horizontal value: " + horizontalValue);
     }
 

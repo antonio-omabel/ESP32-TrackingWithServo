@@ -30,10 +30,7 @@ public class MainActivity extends AppCompatActivity implements IMyRotationVector
     private TextView tvHorizontalValue = null;
     private EditText etIP = null,etIPpart1 = null, etIPpart2=null,etIPpart3=null,etIPpart4=null, etDegrees=null;
     private OkHttpClient client;
-
-    //Hard coded strings only for testing purposes
-    private String clockwiseUrl = "http://192.168.43.147/get?data=90";
-    private String counterclockwiseUrl = "http://192.168.43.147/get?data=-90";
+ 
     /*private MyAccelerometer myAccelerometer = null;*/
     private MyRotationVector myRotationVector = null;
     public MainActivity() throws MalformedURLException, UnsupportedEncodingException {
@@ -83,13 +80,9 @@ public class MainActivity extends AppCompatActivity implements IMyRotationVector
             Log.i(TAG, "Change servo speed to Fast");
             httpRequest("CONFIG10");
         });
-
-
-
+        
         StartBackgroundService();
         StopBackgroundService();
-
-
     }
 
     private void StartBackgroundService() {
@@ -101,7 +94,6 @@ public class MainActivity extends AppCompatActivity implements IMyRotationVector
             }
             else{Log.i(TAG, "Background service already running");}
             Log.i(TAG,"Rotation");
-            httpRequest(clockwiseUrl);
     });
 
     }
@@ -124,9 +116,10 @@ public class MainActivity extends AppCompatActivity implements IMyRotationVector
         myRotationVector = new MyRotationVector(this, this);
         tvHorizontalValue = findViewById(R.id.tvHorizontalValue);
     }
-
-
+    
     private void httpRequest(String data){
+        //TODO: fix error "http request fail when rotation works (happens with 900+° degrees rotation)
+        //TODO: move in separate class
         String url = getIP() + data;
         Log.i(TAG, "RotateFunction");
         Request request = new Request.Builder()
@@ -145,9 +138,7 @@ public class MainActivity extends AppCompatActivity implements IMyRotationVector
             }
         });
     }
-
-
-
+    
     //Reads IP from the 4 edit text in the menu and returns it as a string
     private String getIP (){
         String iP = "http://" + etIPpart1.getText().toString() + "." + etIPpart2.getText().toString() + "." + etIPpart3.getText().toString() + "." + etIPpart4.getText().toString() + "/get?data=";
@@ -155,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements IMyRotationVector
     }
 
     @Override
-    public void onNewRotationVectorValuesAvaible(double x) {
+    public void onNewRotationVectorValuesAvailable(double x) {
         tvHorizontalValue.setText("Horizontal value: \n" + x);
     }
 }
