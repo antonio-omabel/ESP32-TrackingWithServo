@@ -2,6 +2,10 @@
 #include <Stepper.h>
 #include <WiFi.h>
 #include <WebServer.h>
+#include <SPI.h>
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
 
 WebServer server(80);
 
@@ -16,6 +20,18 @@ const int stepsPerRevolution = 2048;  // change this to fit the number of steps 
 #define IN3 14
 #define IN4 12
 
+// ULN2003 Motor Driver Pins
+#define IN1 27
+#define IN2 13
+#define IN3 14
+#define IN4 12
+
+#define SCREEN_WIDTH 128 // OLED display width, in pixels
+#define SCREEN_HEIGHT 64 // OLED display height, in pixels
+
+#define OLED_RESET     -1 // Reset pin # (or -1 if sharing Arduino reset pin)
+#define SCREEN_ADDRESS 0x3C
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 //Stepper creation
 Stepper myStepper(stepsPerRevolution, IN1, IN3, IN2, IN4);
@@ -24,6 +40,10 @@ Stepper myStepper(stepsPerRevolution, IN1, IN3, IN2, IN4);
 void moveInDegrees (int degrees){
   int steps= (degrees*stepsPerRevolution)/360;
   myStepper.step(steps);
+  display.println(degrees);
+  
+  display.display();
+  //TODO: make function to call and print looping only in the blue zones for the degrees
 }
 
 
@@ -76,7 +96,17 @@ void setup()
 {
     Serial.begin(115200);
     pinMode(2, OUTPUT);      // set the LED pin mode
+    Wire.begin(26, 25); // change deafult I2C pins
 
+    // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
+  if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
+    Serial.println(F("SSD1306 allocation failed"));
+    for(;;); // Don't proceed, loop forever
+    } 
+
+  // Show initial display buffer contents on the screen --
+  // the library initializes this with an Adafruit splash screen.
+    display.display();
     delay(10);
 
     // We start by connecting to a WiFi network
@@ -97,6 +127,7 @@ void setup()
     Serial.println("WiFi connected.");
     Serial.println("IP address: ");
     Serial.println(WiFi.localIP());
+    
 
     //Blink 3 times to signal wifi connection
     for (int i=0; i<3; i++){
@@ -113,6 +144,15 @@ void setup()
     server.on("/post", HTTP_POST, handlePost, handleUpload);
     server.begin();
     myStepper.setSpeed(5);
+    
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 8);
+    // Display static text
+    display.println(WiFi.localIP());
+    
+    display.display(); 
 }
 
 void loop()
