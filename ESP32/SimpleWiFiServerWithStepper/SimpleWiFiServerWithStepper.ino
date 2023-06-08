@@ -33,6 +33,8 @@ const int stepsPerRevolution = 2048;  // change this to fit the number of steps 
 #define SCREEN_ADDRESS 0x3C
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
+int displayCounter = 0;
+
 //Stepper creation
 Stepper myStepper(stepsPerRevolution, IN1, IN3, IN2, IN4);
 
@@ -40,10 +42,40 @@ Stepper myStepper(stepsPerRevolution, IN1, IN3, IN2, IN4);
 void moveInDegrees (int degrees){
   int steps= (degrees*stepsPerRevolution)/360;
   myStepper.step(steps);
-  display.println(degrees);
-  
-  display.display();
+  //displayMessage(degrees);
   //TODO: make function to call and print looping only in the blue zones for the degrees
+}
+
+//temporary int to print correctly
+int rowCounter=17;
+
+void displayMessage (String message){
+  
+  if (displayCounter < 12){
+    if(displayCounter >= 6){
+      display.setCursor(64, rowCounter);
+      display.println(message);
+      display.display();
+      displayCounter++;
+      rowCounter += 8;
+    }
+    else{
+      display.println(message);
+      display.display();
+      displayCounter++;
+    }
+    
+    
+  }
+  else {
+    display.clearDisplay();
+    display.setCursor(0, 8);
+    display.println(WiFi.localIP());
+    display.println(message);
+    display.display(); 
+    displayCounter=0;
+    rowCounter = 17;
+  }
 }
 
 
@@ -58,6 +90,7 @@ void handleGet() {
   if (server.hasArg("data")) {
     String data = server.arg("data");
     Serial.println("Data: " + data);
+    displayMessage (data);
 
     //converts data received to int and moves motor
     int degrees = data.toInt();
@@ -149,7 +182,6 @@ void setup()
     display.setTextSize(1);
     display.setTextColor(WHITE);
     display.setCursor(0, 8);
-    // Display static text
     display.println(WiFi.localIP());
     
     display.display(); 
