@@ -20,39 +20,33 @@ const int stepsPerRevolution = 2048;  // change this to fit the number of steps 
 #define IN3 14
 #define IN4 12
 
-// ULN2003 Motor Driver Pins
-#define IN1 27
-#define IN2 13
-#define IN3 14
-#define IN4 12
-
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
 
 #define OLED_RESET     -1 // Reset pin # (or -1 if sharing Arduino reset pin)
-#define SCREEN_ADDRESS 0x3C
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+#define SCREEN_ADDRESS 0x3C //Oled Screen Address for initialization
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET); //initialization of Oled Screen
 
-int displayCounter = 0;
 
-//Stepper creation
+int displayCounter = 0; //Used to reset display when full
+int rowCounter = 17; //Used to print to the second column correctly
+
+//Stepper initialization
 Stepper myStepper(stepsPerRevolution, IN1, IN3, IN2, IN4);
 
 //Converts desired degrees in steps depending on stepsPerRevolution
 void moveInDegrees (int degrees){
   int steps= (degrees*stepsPerRevolution)/360;
   myStepper.step(steps);
-  //displayMessage(degrees);
-  //TODO: make function to call and print looping only in the blue zones for the degrees
 }
 
-//temporary int to print correctly
-int rowCounter=17;
+
 
 void displayMessage (String message){
   
   if (displayCounter < 12){
-    if(displayCounter >= 6){
+    
+    if(displayCounter >= 6){ //when we exceed the space on the first column move to the second
       display.setCursor(64, rowCounter);
       display.println(message);
       display.display();
@@ -65,9 +59,9 @@ void displayMessage (String message){
       displayCounter++;
     }
     
-    
   }
   else {
+    //when display is full reset it but printing again the address
     display.clearDisplay();
     display.setCursor(0, 8);
     display.println(WiFi.localIP());
@@ -124,7 +118,6 @@ void handleUpload() {
 }
 
 
-
 void setup()
 {
     Serial.begin(115200);
@@ -140,7 +133,14 @@ void setup()
   // Show initial display buffer contents on the screen --
   // the library initializes this with an Adafruit splash screen.
     display.display();
-    delay(10);
+    delay(100);
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 0);
+    display.println("Connecting to:");
+    display.println(ssid);
+    display.display();
 
     // We start by connecting to a WiFi network
 
@@ -178,6 +178,7 @@ void setup()
     server.begin();
     myStepper.setSpeed(5);
     
+    //Print address for the first time
     display.clearDisplay();
     display.setTextSize(1);
     display.setTextColor(WHITE);
