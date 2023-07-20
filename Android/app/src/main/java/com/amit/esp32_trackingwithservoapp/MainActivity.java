@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.amit.esp32_trackingwithservoapp.Interfaces.IMyRotationVector;
 import com.amit.esp32_trackingwithservoapp.Sensor.MyRotationVector;
-import com.amit.esp32_trackingwithservoapp.Services.MyBackgroundService;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -42,19 +41,6 @@ public class MainActivity extends AppCompatActivity implements IMyRotationVector
         setContentView(R.layout.activity_main);
         Init();
 
-        etIP =  findViewById(R.id.etIP);
-        etIPpart1 =  findViewById(R.id.etIPPart1);
-        etIPpart2 =  findViewById(R.id.etIPPart2);
-        etIPpart3 =  findViewById(R.id.etIPPart3);
-        etIPpart4 =  findViewById(R.id.etIPPart4);
-        etDegrees = findViewById(R.id.etDegrees);
-
-
-        bttGO = findViewById(R.id.bttGo);
-        bttSlowSpeed = findViewById(R.id.bttSlowSpeed);
-        bttNormalSpeed = findViewById(R.id.bttNormalSpeed);
-        bttFastSpeed = findViewById(R.id.bttFastSpeed);
-
         bttGO.setOnClickListener((v) -> {
             Log.i(TAG, "User Defined Rotation");
             httpRequest(etDegrees.getText().toString());
@@ -80,30 +66,15 @@ public class MainActivity extends AppCompatActivity implements IMyRotationVector
             Log.i(TAG, "Change servo speed to Fast");
             httpRequest("CONFIG10");
         });
-        
-        StartBackgroundService();
-        StopBackgroundService();
-    }
 
-    private void StartBackgroundService() {
         bttStart.setOnClickListener((v)->{
             myRotationVector.start();
-            Log.i(TAG, "Start background service");
-            if(!MyBackgroundService.isRunning){
-                startService(new Intent(this, MyBackgroundService.class));
-            }
-            else{Log.i(TAG, "Background service already running");}
-            Log.i(TAG,"Rotation");
-    });
+            Log.i(TAG, "Start Rotation Vector");
+        });
 
-    }
-
-    private void StopBackgroundService() {
-        myRotationVector.stop();
         bttStop.setOnClickListener((v)->{
             myRotationVector.stop();
-            Log.i(TAG, "Stop background service");
-            stopService(new Intent(this, MyBackgroundService.class));
+            Log.i(TAG, "Stop Rotation Vector");
         });
     }
 
@@ -112,9 +83,24 @@ public class MainActivity extends AppCompatActivity implements IMyRotationVector
         bttRotateCounterclockwise=findViewById(R.id.bttRotateCounterclockwise);
         bttStart = findViewById(R.id.bttStart);
         bttStop = findViewById(R.id.bttStop);
+
         client = new OkHttpClient();
+
         myRotationVector = new MyRotationVector(this, this);
         tvHorizontalValue = findViewById(R.id.tvHorizontalValue);
+
+        etIP =  findViewById(R.id.etIP);
+        etIPpart1 =  findViewById(R.id.etIPPart1);
+        etIPpart2 =  findViewById(R.id.etIPPart2);
+        etIPpart3 =  findViewById(R.id.etIPPart3);
+        etIPpart4 =  findViewById(R.id.etIPPart4);
+        etDegrees = findViewById(R.id.etDegrees);
+
+
+        bttGO = findViewById(R.id.bttGo);
+        bttSlowSpeed = findViewById(R.id.bttSlowSpeed);
+        bttNormalSpeed = findViewById(R.id.bttNormalSpeed);
+        bttFastSpeed = findViewById(R.id.bttFastSpeed);
     }
     
     private void httpRequest(String data){
