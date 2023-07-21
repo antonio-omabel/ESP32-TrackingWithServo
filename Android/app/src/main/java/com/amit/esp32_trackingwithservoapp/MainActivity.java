@@ -2,7 +2,6 @@ package com.amit.esp32_trackingwithservoapp;
 
 import static java.lang.Math.round;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageCapture;
@@ -12,7 +11,6 @@ import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,7 +20,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.amit.esp32_trackingwithservoapp.Interfaces.IMyOrientation;
-import com.amit.esp32_trackingwithservoapp.Interfaces.ISettings;
 import com.amit.esp32_trackingwithservoapp.Sensor.MyOrientation;
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -30,7 +27,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.util.concurrent.Executor;
 
-public class MainActivity extends AppCompatActivity implements IMyOrientation, ISettings {
+import Interfaces.SettingsChanged;
+
+public class MainActivity extends AppCompatActivity implements IMyOrientation, SettingsChanged {
     private final String TAG = "MainActivity";
 
     private PreviewView previewView;
@@ -42,10 +41,12 @@ public class MainActivity extends AppCompatActivity implements IMyOrientation, I
 
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     private ImageCapture imageCapture;
+
     private String url = null;
     private HttpHandler httpHandler = null;
     private Boolean firstLoop = true;
-    private Long firstValue = null;
+    private Long targetValue = null;
+    private SettingsChanged settingsChanged = null;
 
 
     public MainActivity() throws MalformedURLException, UnsupportedEncodingException {
@@ -55,6 +56,8 @@ public class MainActivity extends AppCompatActivity implements IMyOrientation, I
         protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        settingsChanged = this;
 
         Init();
         bttStart.setOnClickListener((v)->{
@@ -79,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements IMyOrientation, I
                     Log.i(TAG, "Settings opening");
                     startActivity(intent);
                 }
-            });
+        });
     }
 
 
@@ -123,35 +126,37 @@ public class MainActivity extends AppCompatActivity implements IMyOrientation, I
     @Override
     public void onNewOrientationValuesAvailable(double x, double y, double z) {
         if (firstLoop){
-            firstValue = round(x);
+            targetValue = round(x);
             firstLoop = false;
-            Log.i(TAG,"The first value is: "+firstValue.toString());
+            Log.i(TAG,"The target value is: "+ targetValue.toString());
         }
-        else if((firstValue - x > 4)) {
-            if ((firstValue - x > 180)) {
+        else if((targetValue - x > 4)) {
+            if ((targetValue - x > 180)) {
                 httpHandler.httpRequest("-3");
-                Log.i(TAG, "Counterclockwise positional adjustament");
+                Log.i(TAG, "Counterclockwise positional adjustment");
             } else {
                 httpHandler.httpRequest("3");
-                Log.i(TAG, "Clockwise positional adjustament");
+                Log.i(TAG, "Clockwise positional adjustment");
               }
             }
-        else if (firstValue - x < -4) {
-                if ((firstValue - x < -180)) {
+        else if (targetValue - x < -4) {
+                if ((targetValue - x < -180)) {
                     httpHandler.httpRequest("3");
-                    Log.i(TAG, "Clockwise positional adjustament");
+                    Log.i(TAG, "Clockwise positional adjustment");
                 }
                 else {
                     httpHandler.httpRequest("-3");
-                    Log.i(TAG, "Counterclockwise positional adjustament");
+                    Log.i(TAG, "Counterclockwise positional adjustment");
                 }
             }
-        orientationValue.setText("Values:\n" + round(x) + "\n" + round(y) + "\n" + round(z)+"\n"+firstValue);
+        orientationValue.setText("Values:\n" + round(x) + "\n" + round(y) + "\n" + round(z)+"\nTarget:"+ targetValue);
         }
 
+
+
     @Override
-    public void onNewUrl(String newUrl) {
-        httpHandler.url=newUrl;
+    public void onSettingsChanged(String url) {
+        httpHandler.setIp(url);
     }
 }
 

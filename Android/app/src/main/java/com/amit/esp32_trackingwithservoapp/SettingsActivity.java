@@ -2,22 +2,25 @@ package com.amit.esp32_trackingwithservoapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.amit.esp32_trackingwithservoapp.Interfaces.ISettings;
+import Interfaces.SettingsChanged;
 
-public class SettingsActivity extends AppCompatActivity implements ISettings {
+public class SettingsActivity extends AppCompatActivity implements SettingsChanged {
 
     private final String TAG = "SettingsActivity";
     private EditText etIP = null,etIPpart1 = null, etIPpart2=null,etIPpart3=null,etIPpart4=null, etDegrees=null;
 
     public HttpHandler httpHandler = null;
     private Button bttSetIP = null, bttGo = null, bttHome = null;
+
+    //TODO: NEW - CHECK
+    private SettingsChanged settingsChanged = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +29,7 @@ public class SettingsActivity extends AppCompatActivity implements ISettings {
         Init();
         bttSetIP.setOnClickListener((v) -> {
             Log.i(TAG, "New IP Setted");
-            httpHandler.url=getIP();
+            httpHandler.setIp(getIP());
         });
 
         bttGo.setOnClickListener((v)->{
@@ -68,8 +71,12 @@ public class SettingsActivity extends AppCompatActivity implements ISettings {
         return iP;
     }
 
+
     @Override
-    public void onNewUrl(String newUrl) {
-        newUrl=getIP();
+    public void onSettingsChanged(String url) {
+        Log.i(TAG, "onSettingsChanged");
+        String newUrl = getIP();
+
+        this.settingsChanged.onSettingsChanged(newUrl);
     }
 }
