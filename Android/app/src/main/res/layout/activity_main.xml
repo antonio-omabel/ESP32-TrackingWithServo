@@ -7,185 +7,7 @@
     android:gravity="center"
     tools:context=".MainActivity">
 
-    <LinearLayout
-        android:id="@+id/lCamera"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="4"
-        android:background="#4683bb"
-        android:gravity="top|center"
-        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tvHorizontalValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Horizontal value:"
-            android:textColor="@color/white"
-            android:textSize="20dp" />
-
-        <EditText
-            android:id="@+id/etIP"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="text"
-            android:text="http://192.168.43.147/get?data=-45" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="37dp" />
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Set IP Address manually:" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/etIPPart1"
-                android:layout_width="72dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="text"
-                android:text="192" />
-
-            <TextView
-                android:id="@+id/dot1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="." />
-
-            <EditText
-                android:id="@+id/etIPPart2"
-                android:layout_width="68dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="text"
-                android:text="168" />
-
-            <TextView
-                android:id="@+id/dot"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="." />
-
-            <EditText
-                android:id="@+id/etIPPart3"
-                android:layout_width="86dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="text"
-                android:text="43" />
-
-            <TextView
-                android:id="@+id/dot2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="." />
-
-            <EditText
-                android:id="@+id/etIPPart4"
-                android:layout_width="62dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="text"
-                android:text="147" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Move of:" />
-
-            <EditText
-                android:id="@+id/etDegrees"
-                android:layout_width="48dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="text"
-                android:text="90" />
-
-            <TextView
-                android:id="@+id/textView5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="°" />
-
-            <Button
-                android:id="@+id/bttGo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="GO" />
-        </LinearLayout>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="38dp" />
-
-        <TextView
-            android:id="@+id/textViewSpeed"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Set Speed" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="295dp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/bttSlowSpeed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Slow" />
-
-            <Button
-                android:id="@+id/bttNormalSpeed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Normal" />
-
-            <Button
-                android:id="@+id/bttFastSpeed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="fast" />
-
-        </LinearLayout>
-
-        <androidx.camera.view.PreviewView
-            android:id="@+id/view_finder"
-            android:layout_width="match_parent"
-            android:layout_height="141dp" />
-
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="0dp"
@@ -195,39 +17,54 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/bttStart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Start"
-            android:textSize="20dp" />
 
-        <Button
-            android:id="@+id/bttStop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Stop"
-            android:textSize="20dp" />
+        <androidx.camera.view.PreviewView
+            android:id="@+id/view_finder"
+            android:layout_width="match_parent"
+            android:layout_height="216dp">
 
-        <Button
-            android:id="@+id/bttRotateClockwise"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:text="Rotate\nclockwise"
-            android:textSize="12dp">
+            <ImageButton
+                android:id="@+id/bttSettings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@android:drawable/ic_menu_preferences" />
+        </androidx.camera.view.PreviewView>
 
-        </Button>
 
-        <Button
-            android:id="@+id/bttRotateCounterclockwise"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Rotate\ncounter\nclockwise"
-            android:textSize="12dp"></Button>
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/bttStart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginRight="20dp"
+                android:text="Start"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/tvOrientationValue"
+                android:layout_width="216dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="TextView" />
+
+            <Button
+                android:id="@+id/bttStop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:text="Stop"
+                android:textSize="20dp" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
