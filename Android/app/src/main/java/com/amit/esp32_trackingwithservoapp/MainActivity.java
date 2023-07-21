@@ -1,5 +1,7 @@
 package com.amit.esp32_trackingwithservoapp;
 
+import static java.lang.Math.round;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageCapture;
@@ -9,44 +11,41 @@ import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.amit.esp32_trackingwithservoapp.Interfaces.IMyRotationVector;
-import com.amit.esp32_trackingwithservoapp.Sensor.MyRotationVector;
+import com.amit.esp32_trackingwithservoapp.Interfaces.IMyOrientation;
+import com.amit.esp32_trackingwithservoapp.Sensor.MyOrientation;
 import com.google.common.util.concurrent.ListenableFuture;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-
-public class MainActivity extends AppCompatActivity implements IMyRotationVector {
+public class MainActivity extends AppCompatActivity implements IMyOrientation{
     private String TAG = "MainActivity";
 
     private PreviewView previewView;
     private Button bttRotateClockwise=null, bttRotateCounterclockwise=null,bttStart = null,
             bttStop = null, bttGO=null, bttSlowSpeed = null,bttNormalSpeed = null, bttFastSpeed=null;
-    private TextView tvHorizontalValue = null;
+    private TextView orientationValue = null;
     private EditText etIP = null,etIPpart1 = null, etIPpart2=null,etIPpart3=null,etIPpart4=null, etDegrees=null;
-    private OkHttpClient client;
+
  
     /*private MyAccelerometer myAccelerometer = null;*/
-    private MyRotationVector myRotationVector = null;
+    private MyOrientation myOrientation = null;
 
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     private ImageCapture imageCapture;
+    private String url = null;
+    private HttpHandler httpHandler= new HttpHandler();
+    private Boolean firstLoop = true;
+    private Long firstValue = null;
+
 
     public MainActivity() throws MalformedURLException, UnsupportedEncodingException {
     }
@@ -59,38 +58,42 @@ public class MainActivity extends AppCompatActivity implements IMyRotationVector
 
         bttGO.setOnClickListener((v) -> {
             Log.i(TAG, "User Defined Rotation");
-            httpRequest(etDegrees.getText().toString());
+            //TODO: Change Button to "SetIP"
+            url = getIP();
+            httpHandler.url=url;
+            //httpHandler = new HttpHandler(url);
+            httpHandler.httpRequest(etDegrees.getText().toString());
         });
 
         bttRotateClockwise.setOnClickListener((v) -> {
             Log.i(TAG, "Clockwise rotation");
-            httpRequest("90");
+            httpHandler.httpRequest("90");
         });
         bttRotateCounterclockwise.setOnClickListener((v) -> {
             Log.i(TAG, "Counterclockwise rotation");
-            httpRequest("-90");
+            httpHandler.httpRequest("-90");
         });
         bttSlowSpeed.setOnClickListener((v) -> {
             Log.i(TAG, "Change servo speed to Slow");
-            httpRequest("CONFIG3");
+            httpHandler.httpRequest("CONFIG3");
         });
         bttNormalSpeed.setOnClickListener((v) -> {
             Log.i(TAG, "Change servo speed to Normal");
-            httpRequest("CONFIG5");
+            httpHandler.httpRequest("CONFIG5");
         });
         bttFastSpeed.setOnClickListener((v) -> {
             Log.i(TAG, "Change servo speed to Fast");
-            httpRequest("CONFIG10");
+            httpHandler.httpRequest("CONFIG10");
         });
 
         bttStart.setOnClickListener((v)->{
-            myRotationVector.start();
-            Log.i(TAG, "Start Rotation Vector");
+            myOrientation.start();
+            Log.i(TAG, "Start Orientation");
         });
 
         bttStop.setOnClickListener((v)->{
-            myRotationVector.stop();
-            Log.i(TAG, "Stop Rotation Vector");
+            myOrientation.stop();
+            Log.i(TAG, "Stop Orientation");
         });
     }
 
@@ -107,27 +110,27 @@ public class MainActivity extends AppCompatActivity implements IMyRotationVector
                 e.printStackTrace();
             }
         },getExecutor());
-
-
-
-        bttRotateClockwise=findViewById(R.id.bttRotateClockwise);
-        bttRotateCounterclockwise=findViewById(R.id.bttRotateCounterclockwise);
-        bttStart = findViewById(R.id.bttStart);
-        bttStop = findViewById(R.id.bttStop);
-
-        client = new OkHttpClient();
-
-        myRotationVector = new MyRotationVector(this, this);
-        tvHorizontalValue = findViewById(R.id.tvHorizontalValue);
-
-        previewView = findViewById(R.id.view_finder);
-
         etIP =  findViewById(R.id.etIP);
         etIPpart1 =  findViewById(R.id.etIPPart1);
         etIPpart2 =  findViewById(R.id.etIPPart2);
         etIPpart3 =  findViewById(R.id.etIPPart3);
         etIPpart4 =  findViewById(R.id.etIPPart4);
         etDegrees = findViewById(R.id.etDegrees);
+        url = getIP();
+        httpHandler.url=url;
+
+        bttRotateClockwise=findViewById(R.id.bttRotateClockwise);
+        bttRotateCounterclockwise=findViewById(R.id.bttRotateCounterclockwise);
+        bttStart = findViewById(R.id.bttStart);
+        bttStop = findViewById(R.id.bttStop);
+
+
+        myOrientation = new MyOrientation(this, this);
+        orientationValue = findViewById(R.id.tvHorizontalValue);
+
+        previewView = findViewById(R.id.view_finder);
+
+
 
 
         bttGO = findViewById(R.id.bttGo);
@@ -158,36 +161,42 @@ public class MainActivity extends AppCompatActivity implements IMyRotationVector
 
     }
 
-    private void httpRequest(String data){
-        //TODO: fix error "http request fail when rotation works (happens with 900+° degrees rotation)
-        //TODO: move in separate class
-        String url = getIP() + data;
-        Log.i(TAG, "RotateFunction");
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
-                Log.i(TAG,"Http request fail");
-            }
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {Log.i(TAG,"Http request onResponse success");}
-                else{Log.i(TAG,"Http request onResponse fail");}
-            }
-        });
-    }
-    
+
+
     //Reads IP from the 4 edit text in the menu and returns it as a string
-    private String getIP (){
+    public String getIP () {
         String iP = "http://" + etIPpart1.getText().toString() + "." + etIPpart2.getText().toString() + "." + etIPpart3.getText().toString() + "." + etIPpart4.getText().toString() + "/get?data=";
         return iP;
     }
 
     @Override
-    public void onNewRotationVectorValuesAvailable(double x) {
-        tvHorizontalValue.setText("Horizontal value: \n" + x);
+    public void onNewOrientationValuesAvailable(double x, double y, double z) {
+        if (firstLoop){
+            firstValue = round(x);
+            firstLoop = false;
+            Log.i(TAG,"The first value is: "+firstValue.toString());
+        }
+        else if((firstValue - x > 4)) {
+            if ((firstValue - x > 180)) {
+                httpHandler.httpRequest("-1");
+                Log.i(TAG, "Counterclockwise positional adjustament");
+            } else {
+                httpHandler.httpRequest("1");
+                Log.i(TAG, "Clockwise positional adjustament");
+              }
+            }
+        else if (firstValue - x < -4) {
+                if ((firstValue - x < -180)) {
+                    httpHandler.httpRequest("1");
+                    Log.i(TAG, "Clockwise positional adjustament");
+                }
+                else {
+                    httpHandler.httpRequest("-1");
+                    Log.i(TAG, "Counterclockwise positional adjustament");
+                }
+            }
+        orientationValue.setText("Values:\n" + round(x) + "\n" + round(y) + "\n" + round(z)+"\n"+firstValue);
+        }
+
     }
-}
+
