@@ -33,7 +33,7 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
 
     private PreviewView previewView;
     private Button bttStart = null, bttStop = null;
-    private ImageButton bttSettings = null;
+    private ImageButton bttBack = null;
     private TextView orientationValue = null;
 
     private MyOrientation myOrientation = null;
@@ -71,7 +71,7 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
         });
 
 
-        buttonStartSettings();
+        buttonStartHome();
 
     }
 
@@ -90,11 +90,11 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
         },getExecutor());
     }
 
-    private void buttonStartSettings() {
-        bttSettings.setOnClickListener(new View.OnClickListener() {
+    private void buttonStartHome() {
+        bttBack.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.i(TAG, "Settings opening");
+                    Log.i(TAG, "Home opening");
                     myOrientation.stop();
                     finish();
                 }
@@ -106,16 +106,16 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
         Log.i(TAG, "Init");
         bttStart = findViewById(R.id.bttStart);
         bttStop = findViewById(R.id.bttStop);
-        bttSettings=findViewById(R.id.bttSettings);
+        bttBack =findViewById(R.id.bttBack);
 
         myOrientation = new MyOrientation(this, this);
         orientationValue = findViewById(R.id.tvOrientationValue);
         previewView = findViewById(R.id.view_finder);
 
-        httpHandler = new HttpHandler();
+        httpHandler = new HttpHandler(this);
         Intent intent = getIntent();
         httpHandler.url = intent.getStringExtra("URL");
-        Log.i(TAG,"Url from settings: "+httpHandler.url);
+        Log.i(TAG,"Url from main: "+httpHandler.url);
     }
 
     private Executor getExecutor() {
@@ -142,13 +142,37 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
 
     @Override
     public void onNewOrientationValuesAvailable(double x) {
-        if (firstLoop){
+        if (firstLoop) {
             targetValue = round(x);
             firstLoop = false;
-            Log.i(TAG,"The target value is: "+ targetValue.toString());
+            Log.i(TAG, "The target value is: " + targetValue.toString());
         }
-        else if((targetValue - x > 4)) {
-            if ((targetValue - x > 180)) {
+
+        int difference = (int) (targetValue - x);
+        if (difference < -4) {
+            if (difference >= -180) {
+                httpHandler.httpRequest("CW");
+            }
+            else {
+                httpHandler.httpRequest("CCW");
+            }
+        }
+        else if (difference > 4) {
+            if (difference <= 180) {
+                httpHandler.httpRequest("CCW");
+            }
+            else {
+                httpHandler.httpRequest("CW");
+            }
+        }
+        orientationValue.setText("Current value: \n" + round(x) + "°" + "\nTarget value:\n" + targetValue + "°");
+
+
+
+
+
+        /*else if(targetValue - x > 4) {
+            if ((targetValue - x >= 180)) {
                 httpHandler.httpRequest("-3");
                 Log.i(TAG, "Counterclockwise positional adjustment");
             } else {
@@ -165,8 +189,8 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
                     httpHandler.httpRequest("-3");
                     Log.i(TAG, "Counterclockwise positional adjustment");
                 }
-            }
-        orientationValue.setText("Current value: \n" + round(x) + "°" + "\nTarget value:\n"+ targetValue + "°");
-        }
+            }*/
+
+    }
 }
 

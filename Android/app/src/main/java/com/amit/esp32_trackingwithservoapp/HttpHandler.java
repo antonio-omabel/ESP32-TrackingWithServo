@@ -1,8 +1,14 @@
 package com.amit.esp32_trackingwithservoapp;
 
+import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
+
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -14,9 +20,11 @@ public class HttpHandler{
     private final String TAG = "Http Handler";
     public OkHttpClient client = null;
     public String url = null;
+    public Context context = null;
 
-    public HttpHandler(){
+    public HttpHandler(Context context){
         client = new OkHttpClient();
+        this.context = context;
     }
     public void httpRequest(String data){
         Log.i(TAG, "RotateFunction. Url: "+url+data);
@@ -27,8 +35,9 @@ public class HttpHandler{
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
-                Log.i(TAG,"Http request fail");
+                Log.i(TAG,"Http request failed");
             }
+
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {

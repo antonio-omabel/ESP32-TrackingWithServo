@@ -61,10 +61,20 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        buttonStartHome();
+        buttonStartApplication();
+        buttonStartManual();
     }
 
-    private void buttonStartHome() {
+    private void buttonStartManual() {
+        bttManual.setOnClickListener(v -> {
+            Log.i(TAG, "Manual control opening. Url: " + httpHandler.url);
+            Intent intent = new Intent(MainActivity.this, ManualControlActivity.class);
+            intent.putExtra("URL", httpHandler.url);
+            startActivity(intent);
+        });
+    }
+
+    private void buttonStartApplication() {
         bttHome.setOnClickListener(v -> {
             Log.i(TAG, "Home opening. Url: " + httpHandler.url);
             Intent intent = new Intent(MainActivity.this, ApplicationActivity.class);
@@ -88,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         bttManual = findViewById(R.id.bttManual);
         bttAbout = findViewById(R.id.bttAbout);
 
-        httpHandler = new HttpHandler();
+        httpHandler = new HttpHandler(this);
         httpHandler.url=getIP();
         Log.i(TAG, "Getting IP");
 

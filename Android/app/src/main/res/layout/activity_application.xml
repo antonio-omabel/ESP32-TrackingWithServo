@@ -24,7 +24,7 @@
             android:orientation="vertical">
 
             <ImageButton
-                android:id="@+id/bttSettings"
+                android:id="@+id/bttBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@android:drawable/ic_menu_revert" />
