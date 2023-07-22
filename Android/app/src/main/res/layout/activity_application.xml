@@ -5,29 +5,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    tools:context=".MainActivity">
-
+    tools:context=".ApplicationActivity">
 
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2"
-        android:background="#3b6e9e"
         android:gravity="center"
         android:orientation="vertical">
 
 
+        <ImageButton
+            android:id="@+id/bttSettings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@android:drawable/ic_menu_revert" />
+
         <androidx.camera.view.PreviewView
             android:id="@+id/view_finder"
-            android:layout_width="match_parent"
-            android:layout_height="216dp">
+            android:layout_width="475dp"
+            android:layout_height="126dp">
 
-            <ImageButton
-                android:id="@+id/bttSettings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@android:drawable/ic_menu_preferences" />
         </androidx.camera.view.PreviewView>
 
 
@@ -51,8 +50,7 @@
                 android:id="@+id/tvOrientationValue"
                 android:layout_width="216dp"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="TextView" />
+                android:gravity="center" />
 
             <Button
                 android:id="@+id/bttStop"

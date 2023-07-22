@@ -4,184 +4,237 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SettingsActivity">
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:layout_weight="2"
+        android:fontFamily="sans-serif-black"
+        android:gravity="center"
+        android:text="STABILIZER"
+        android:textSize="40dp"
+        android:textStyle="bold" />
+
+    <View
+        android:id="@+id/divider4"
+        android:layout_width="match_parent"
+        android:layout_height="7dp"
+        android:background="?android:attr/listDivider" />
+
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="4"
-        android:background="#4683bb"
-        android:gravity="top|center"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
         android:orientation="vertical">
 
-        <LinearLayout
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/bttHome"
-                android:layout_width="143dp"
-                android:layout_marginLeft="30dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Home" />
-        </LinearLayout>
-
-        <ScrollView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <TextView
-                android:id="@+id/tvOrientationValue"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="Value:"
-                android:textColor="@color/white"
-                android:textSize="20dp" />
-        </ScrollView>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="20dp" />
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Set your device IP address:"
+            android:textSize="20dp"
+            android:textStyle="bold" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/etIPPart1"
-                android:layout_width="60dp"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="text"
-                android:text="192" />
-
-            <TextView
-                android:id="@+id/dot1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="." />
+                android:text="192"
+                android:textAlignment="center" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="."
+                android:textAlignment="center"
+                android:textSize="20dp" />
 
             <EditText
                 android:id="@+id/etIPPart2"
-                android:layout_width="60dp"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="text"
-                android:text="168" />
-
-            <TextView
-                android:id="@+id/dot"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="." />
+                android:text="168"
+                android:textAlignment="center" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="."
+                android:textAlignment="center"
+                android:textSize="20dp" />
 
             <EditText
                 android:id="@+id/etIPPart3"
-                android:layout_width="60dp"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="text"
-                android:text="43" />
-
-            <TextView
-                android:id="@+id/dot2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="." />
+                android:text="1"
+                android:textAlignment="center" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="."
+                android:textAlignment="center"
+                android:textSize="20dp" />
 
             <EditText
                 android:id="@+id/etIPPart4"
-                android:layout_width="60dp"
-                android:gravity="center"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:ems="10"
-                android:inputType="text"
-                android:text="147" />
+                android:text="125"
+                android:textAlignment="center" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:orientation="horizontal" >
 
             <Space
-                android:layout_width="139dp"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/bttCheckIP"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:text="CHECK IP"
+                android:textAlignment="center"
+                android:textSize="14dp"
+                android:textStyle="bold" />
+
+            <Space
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
                 android:layout_weight="1" />
 
             <Button
                 android:id="@+id/bttSetIP"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="20dp"
-                android:text="Set IP" />
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:text="Set IP"
+                android:textAlignment="center"
+                android:textSize="14dp"
+                android:textStyle="bold" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
 
         </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="match_parent"
+        android:layout_height="7dp"
+        android:background="?android:attr/listDivider" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:orientation="vertical"
+        android:layout_marginHorizontal="15dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Set rotation speed:"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <SeekBar
+            android:id="@+id/sbSpeed"
+            style="@style/Widget.AppCompat.SeekBar.Discrete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:max="2"
+            android:progress="1" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider3"
+        android:layout_width="match_parent"
+        android:layout_height="7dp"
+        android:background="?android:attr/listDivider" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="5" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="15dp"
+        android:layout_weight="3"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/bttHome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Start application"
+            android:textSize="20dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/bttManual"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:text="Manual control"
+                android:textSize="12dp" />
 
             <Space
-                android:layout_width="86dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="end"
-                android:layout_weight="1"
-                android:layout_marginHorizontal="20dp"
-                android:text="Move of:" />
-
-            <EditText
-                android:id="@+id/etDegrees"
-                android:layout_width="52dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:gravity="end"
-                android:inputType="text"
-                android:text="90" />
-
-            <TextView
-                android:id="@+id/textView5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="°" />
-
-            <Space
-                android:layout_width="216dp"
-                android:layout_height="match_parent"
                 android:layout_weight="1" />
 
             <Button
-                android:id="@+id/bttGo"
-                android:layout_width="wrap_content"
+                android:id="@+id/bttAbout"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Go"
-                android:textSize="20dp" />
-
-            <Space
-                android:layout_width="109dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:text="About"
+                android:textSize="12dp" />
 
         </LinearLayout>
 
-
     </LinearLayout>
+
 
 </LinearLayout>

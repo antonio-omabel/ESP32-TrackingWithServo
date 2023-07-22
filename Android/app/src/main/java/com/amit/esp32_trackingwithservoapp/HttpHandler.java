@@ -9,8 +9,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-
-
 public class HttpHandler{
 
     private final String TAG = "Http Handler";
@@ -21,8 +19,7 @@ public class HttpHandler{
         client = new OkHttpClient();
     }
     public void httpRequest(String data){
-        //TODO: fix error "http request fail when rotation works (happens with 900+° degrees rotation)
-        Log.i(TAG, "RotateFunction; "+url+data);
+        Log.i(TAG, "RotateFunction. Url: "+url+data);
         Request request = new Request.Builder()
                 .url(url+data)
                 .build();
@@ -41,11 +38,5 @@ public class HttpHandler{
                     Log.i(TAG,"Http request onResponse fail");}
             }
         });
-
-
-    }
-
-    public void setIp (String url){
-        this.url=url;
     }
 }

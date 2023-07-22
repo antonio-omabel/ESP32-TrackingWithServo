@@ -1,162 +1,111 @@
 package com.amit.esp32_trackingwithservoapp;
 
-import static java.lang.Math.round;
-
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.camera.core.CameraSelector;
-import androidx.camera.core.ImageCapture;
-import androidx.camera.core.Preview;
-import androidx.camera.lifecycle.ProcessCameraProvider;
-import androidx.camera.view.PreviewView;
-import androidx.core.content.ContextCompat;
-import androidx.lifecycle.LifecycleOwner;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.TextView;
+import android.widget.EditText;
+import android.widget.SeekBar;
 
-import com.amit.esp32_trackingwithservoapp.Interfaces.IMyOrientation;
-import com.amit.esp32_trackingwithservoapp.Sensor.MyOrientation;
-import com.google.common.util.concurrent.ListenableFuture;
+public class MainActivity extends AppCompatActivity {
 
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.util.concurrent.Executor;
-
-import Interfaces.SettingsChanged;
-
-public class MainActivity extends AppCompatActivity implements IMyOrientation, SettingsChanged {
     private final String TAG = "MainActivity";
+    private EditText etIP = null,etIPpart1 = null, etIPpart2=null,etIPpart3=null,etIPpart4=null, etDegrees=null;
 
-    private PreviewView previewView;
-    private Button bttStart = null, bttStop = null;
-    private ImageButton bttSettings = null;
-    private TextView orientationValue = null;
+    public HttpHandler httpHandler = null;
+    private Button bttSetIP = null, bttCheckIP = null, bttHome = null, bttManual = null, bttAbout = null;
 
-    private MyOrientation myOrientation = null;
-
-    private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
-    private ImageCapture imageCapture;
-
-    private String url = null;
-    private HttpHandler httpHandler = null;
-    private Boolean firstLoop = true;
-    private Long targetValue = null;
-    private SettingsChanged settingsChanged = null;
+    private SeekBar sbSpeed = null;
 
 
-    public MainActivity() throws MalformedURLException, UnsupportedEncodingException {
-    }
 
     @Override
-        protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        settingsChanged = this;
-
+        setContentView(R.layout.activity_settings);
+        Log.i(TAG, "onCreate");
         Init();
-        bttStart.setOnClickListener((v)->{
-            myOrientation.start();
-            Log.i(TAG, "Start Orientation");
+
+        bttSetIP.setOnClickListener(v -> {
+            httpHandler.url=getIP();
+            Log.i(TAG, "New IP Setted:" + httpHandler.url);
         });
-
-        bttStop.setOnClickListener((v)->{
-            myOrientation.stop();
-            Log.i(TAG, "Stop Orientation");
+        bttCheckIP.setOnClickListener(v -> {
+            httpHandler.httpRequest("Test");
+            Log.i(TAG, "Connection test sendend");
         });
-
-        buttonStartSettings();
-
-    }
-
-    private void buttonStartSettings() {
-        bttSettings.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent("com.amit.esp32_trackingwithservoapp.SettingsActivity");
-                    Log.i(TAG, "Settings opening");
-                    startActivity(intent);
+        sbSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                switch (progress) {
+                    case 0:
+                        httpHandler.httpRequest("CONFIG3");
+                        break;
+                    case 1:
+                        httpHandler.httpRequest("CONFIG5");
+                        break;
+                    case 2:
+                        httpHandler.httpRequest("CONFIG10");
+                        break;
                 }
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+
+
+        buttonStartHome();
+    }
+
+    private void buttonStartHome() {
+        bttHome.setOnClickListener(v -> {
+            Log.i(TAG, "Home opening. Url: " + httpHandler.url);
+            Intent intent = new Intent(MainActivity.this, ApplicationActivity.class);
+            intent.putExtra("URL", httpHandler.url);
+            startActivity(intent);
         });
     }
 
+    /*private void buttonStartHome() {
+        bttHome.setOnClickListener((v)->{
+            Log.i(TAG, "Home opening. Url: " + httpHandler.url);
+            Intent intent = getIntent();
+            intent.putExtra("URL", httpHandler.url);
+            finish();
+        });
+    }*/
 
-    private void Init(){
-        Log.i(TAG, "Main init");
-        bttStart = findViewById(R.id.bttStart);
-        bttStop = findViewById(R.id.bttStop);
-        bttSettings=findViewById(R.id.bttSettings);
+    public void Init(){
+        etIPpart1 =  findViewById(R.id.etIPPart1);
+        etIPpart2 =  findViewById(R.id.etIPPart2);
+        etIPpart3 =  findViewById(R.id.etIPPart3);
+        etIPpart4 =  findViewById(R.id.etIPPart4);
 
+        bttCheckIP = findViewById(R.id.bttCheckIP);
+        bttSetIP = findViewById(R.id.bttSetIP);
 
-        myOrientation = new MyOrientation(this, this);
-        orientationValue = findViewById(R.id.tvOrientationValue);
-        previewView = findViewById(R.id.view_finder);
+        sbSpeed = findViewById(R.id.sbSpeed);
+
+        bttHome = findViewById(R.id.bttHome);
+        bttManual = findViewById(R.id.bttManual);
+        bttAbout = findViewById(R.id.bttAbout);
 
         httpHandler = new HttpHandler();
-        httpHandler.url = getString(R.string.URL);
-    }
-
-    private Executor getExecutor() {
-        return ContextCompat.getMainExecutor(this);
-    }
-
-    private void startCameraX(ProcessCameraProvider cameraProvider) {
-        cameraProvider.unbindAll();
-        //Cameraselector use case
-        CameraSelector cameraSelector = new CameraSelector.Builder()
-                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
-                .build();
-        //Preview Use Case
-        Preview preview = new Preview.Builder().build();
-        preview.setSurfaceProvider(previewView.getSurfaceProvider());
-        // Image capture use case
-        imageCapture = new ImageCapture.Builder()
-                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
-                        .build();
-        
-        cameraProvider.bindToLifecycle((LifecycleOwner) this, cameraSelector,preview, imageCapture);
+        httpHandler.url=getIP();
+        Log.i(TAG, "Getting IP");
 
     }
 
-    @Override
-    public void onNewOrientationValuesAvailable(double x, double y, double z) {
-        if (firstLoop){
-            targetValue = round(x);
-            firstLoop = false;
-            Log.i(TAG,"The target value is: "+ targetValue.toString());
-        }
-        else if((targetValue - x > 4)) {
-            if ((targetValue - x > 180)) {
-                httpHandler.httpRequest("-3");
-                Log.i(TAG, "Counterclockwise positional adjustment");
-            } else {
-                httpHandler.httpRequest("3");
-                Log.i(TAG, "Clockwise positional adjustment");
-              }
-            }
-        else if (targetValue - x < -4) {
-                if ((targetValue - x < -180)) {
-                    httpHandler.httpRequest("3");
-                    Log.i(TAG, "Clockwise positional adjustment");
-                }
-                else {
-                    httpHandler.httpRequest("-3");
-                    Log.i(TAG, "Counterclockwise positional adjustment");
-                }
-            }
-        orientationValue.setText("Values:\n" + round(x) + "\n" + round(y) + "\n" + round(z)+"\nTarget:"+ targetValue);
-        }
-
-
-
-    @Override
-    public void onSettingsChanged(String url) {
-        httpHandler.setIp(url);
+    private String getIP () {
+        String iP = "http://" + etIPpart1.getText().toString() + "." + etIPpart2.getText().toString() + "." + etIPpart3.getText().toString() + "." + etIPpart4.getText().toString() + "/get?data=";
+        return iP;
     }
+
 }
-
