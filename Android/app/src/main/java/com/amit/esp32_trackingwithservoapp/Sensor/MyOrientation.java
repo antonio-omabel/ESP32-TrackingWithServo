@@ -43,11 +43,9 @@ public class MyOrientation implements SensorEventListener {
     public void onSensorChanged(SensorEvent sensorEvent) {
         Log.i(TAG, "onSensorChanged");
         double x = sensorEvent.values[0];
-        double y = sensorEvent.values[1];
-        double z = sensorEvent.values[2];
 
-        iMyOrientation.onNewOrientationValuesAvailable(x,y,z);
-        Log.i(TAG, "Values:\n" + x + "\n" + y + "\n" + z);
+        iMyOrientation.onNewOrientationValuesAvailable(x);
+        Log.i(TAG, "Values\n" + x);
 
 
 

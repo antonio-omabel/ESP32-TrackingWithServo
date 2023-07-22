@@ -59,6 +59,8 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
         Init();
         CameraStarter();
         bttStart.setOnClickListener((v)->{
+            myOrientation.stop();
+            firstLoop = true;
             myOrientation.start();
             Log.i(TAG, "Start Orientation");
         });
@@ -140,7 +142,7 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
     }
 
     @Override
-    public void onNewOrientationValuesAvailable(double x, double y, double z) {
+    public void onNewOrientationValuesAvailable(double x) {
         if (firstLoop){
             targetValue = round(x);
             firstLoop = false;
@@ -165,7 +167,7 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
                     Log.i(TAG, "Counterclockwise positional adjustment");
                 }
             }
-        orientationValue.setText("Values:\n" + round(x) + "\n" + round(y) + "\n" + round(z)+"\nTarget:"+ targetValue);
+        orientationValue.setText("Current value: " + round(x) + "\nTarget value: "+ targetValue);
         }
 }
 
