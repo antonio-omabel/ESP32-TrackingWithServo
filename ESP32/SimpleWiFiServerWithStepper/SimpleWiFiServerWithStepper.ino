@@ -11,8 +11,8 @@ WebServer server(80);
 
 const int stepsPerRevolution = 2048;  // change this to fit the number of steps per revolution
 
- const char* ssid     = "RedmiEma";
- const char* password = "APPAMIT0";
+ const char* ssid     = "TIM-33003703";
+ const char* password = "fgNG6QntXlZsyKF3MKQl21qJ";
 
 // ULN2003 Motor Driver Pins
 #define IN1 27
@@ -118,8 +118,10 @@ void handleGet() {
           displayMessage("COUNTERCLO");
         }
         if (data== "STOP"){
+          myStepper.step(0);
           movement = 0;
           displayMessage("STOP");
+          
         }
       }
       else{ 

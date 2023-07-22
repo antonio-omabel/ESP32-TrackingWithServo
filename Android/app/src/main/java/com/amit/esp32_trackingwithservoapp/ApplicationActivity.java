@@ -45,6 +45,7 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
     private HttpHandler httpHandler = null;
     private Boolean firstLoop = true;
     private Long targetValue = null;
+    private boolean clockwiseRotation = false, counterclockwiseRotation = false;
 
 
     public ApplicationActivity() throws MalformedURLException, UnsupportedEncodingException {
@@ -66,6 +67,7 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
 
         bttStop.setOnClickListener((v)->{
             myOrientation.stop();
+            httpHandler.httpRequest("STOP");
             firstLoop = true;
             Log.i(TAG, "Stop Orientation");
         });
@@ -96,6 +98,7 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
                 public void onClick(View view) {
                     Log.i(TAG, "Home opening");
                     myOrientation.stop();
+                    httpHandler.httpRequest("STOP");
                     finish();
                 }
         });
@@ -150,20 +153,36 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
 
         int difference = (int) (targetValue - x);
         if (difference < -4) {
-            if (difference >= -180) {
+            if (difference >= -180 && !clockwiseRotation) {
                 httpHandler.httpRequest("CW");
+                clockwiseRotation = true;
+                counterclockwiseRotation = false;
+                Log.i(TAG, "Clockwise positional adjustment");
             }
-            else {
+            else if(difference < -180 && !counterclockwiseRotation) {
                 httpHandler.httpRequest("CCW");
+                counterclockwiseRotation = true;
+                clockwiseRotation = false;
+                Log.i(TAG, "Counterclockwise positional adjustment");
             }
         }
         else if (difference > 4) {
-            if (difference <= 180) {
+            if (difference <= 180 && !counterclockwiseRotation) {
                 httpHandler.httpRequest("CCW");
+                counterclockwiseRotation = true;
+                clockwiseRotation = false;
+                Log.i(TAG, "Counterclockwise positional adjustment");
             }
-            else {
+            else if (difference > 180 && !clockwiseRotation) {
                 httpHandler.httpRequest("CW");
+                clockwiseRotation = true;
+                counterclockwiseRotation = false;
+                Log.i(TAG, "Clockwise positional adjustment");
             }
+        }
+        else if (difference<4 && difference>-4){
+            httpHandler.httpRequest("STOP");
+            Log.i(TAG, "Rotation stop");
         }
         orientationValue.setText("Current value: \n" + round(x) + "°" + "\nTarget value:\n" + targetValue + "°");
 
