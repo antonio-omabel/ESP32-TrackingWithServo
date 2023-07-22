@@ -152,6 +152,48 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
         }
 
         int difference = (int) (targetValue - x);
+
+        //calcola la differeza per ruotare l'obiettivo fino a 180
+        long delta = 180 - targetValue;
+        // sets the new target to 180° (useless but explains the delta)
+        long newTargetValue = targetValue + delta;
+        long newActualValue = 0;
+
+        //applica la trasformazione anche al valore attuale
+        if (x + delta > 360){
+            newActualValue= (long) (x + delta -360);
+        }
+        else if (x + delta < 360) {
+            newActualValue = (long) (x + delta);
+        }
+
+        Boolean commandIssued = false;
+
+        //controlla se il comando è partito
+        if (!commandIssued){
+            if (newActualValue < 170) {
+                //se (nel nuovo sistema di rif) il valore è < 180 dobbiamo ruotare CW
+                httpHandler.httpRequest("CW");
+                commandIssued = true;
+            }
+            else if (newActualValue > 190){
+                //se (nel nuovo sistema di rif) il valore è > 180 dobbiamo ruotare CCW
+                httpHandler.httpRequest("CCW");
+                commandIssued = true;
+            }
+            else {httpHandler.httpRequest("STOP");}
+        }
+
+        if (newActualValue < 190 && newActualValue > 170){
+            httpHandler.httpRequest("STOP");
+            commandIssued = false;
+
+        }
+        orientationValue.setText("Current value: \n" + round(x) + "°" + "\nTarget value:\n" + targetValue + "°" +
+                "\nCurrent newvalue: \n" + round(newActualValue) + "°" + "\nnew Target value:\n" + newTargetValue + "°");
+
+
+        /*
         if (difference < -4) {
             if (difference >= -180 && !clockwiseRotation) {
                 httpHandler.httpRequest("CW");
