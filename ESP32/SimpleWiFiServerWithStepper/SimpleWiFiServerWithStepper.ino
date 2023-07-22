@@ -30,6 +30,8 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET); //init
 
 int displayCounter = -1; //Used to reset display when full
 int rowCounter = 17; //Used to print to the second column correctly
+int movement = 0;
+String currentData;
 
 //Stepper initialization
 Stepper myStepper(stepsPerRevolution, IN1, IN3, IN2, IN4);
@@ -83,9 +85,11 @@ void handleRoot() {
 void handleGet() {
   if (server.hasArg("data")) {
     String data = server.arg("data");
-    Serial.println("Data: " + data);
 
-    if (data.toInt()==0){
+    if (currentData!=data){
+      currentData = data;
+      if (data.toInt()==0)
+    {
       
         //if data is a configuration text, change motor speed accordingly
         if (data =="CONFIG3"){
@@ -105,6 +109,18 @@ void handleGet() {
           displayMessage("SUCCESS");
           displayMessage("");
         }
+        if (data== "CW"){
+          movement = 128;
+          displayMessage("CLOCKWISE");
+        }
+        if (data== "CCW"){
+          movement = -128;
+          displayMessage("COUNTERCLO");
+        }
+        if (data== "STOP"){
+          movement = 0;
+          displayMessage("STOP");
+        }
       }
       else{ 
         displayMessage (data);
@@ -112,7 +128,14 @@ void handleGet() {
         int degrees = data.toInt();
         moveInDegrees(degrees);
       }
+      Serial.println("Data: " + data);
     }
+    
+    }
+
+    
+
+    
     
     
     
@@ -212,6 +235,7 @@ void setup()
 
 void loop()
 {
+  myStepper.step(movement);
   server.handleClient();
 }
 
