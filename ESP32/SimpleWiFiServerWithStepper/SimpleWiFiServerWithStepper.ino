@@ -28,7 +28,7 @@ const int stepsPerRevolution = 2048;  // change this to fit the number of steps 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET); //initialization of Oled Screen
 
 
-int displayCounter = 0; //Used to reset display when full
+int displayCounter = -1; //Used to reset display when full
 int rowCounter = 17; //Used to print to the second column correctly
 
 //Stepper initialization
@@ -44,9 +44,9 @@ void moveInDegrees (int degrees){
 
 void displayMessage (String message){
   
-  if (displayCounter < 12){
+  if (displayCounter < 11){
     
-    if(displayCounter >= 6){ //when we exceed the space on the first column move to the second
+    if(displayCounter >= 5){ //when we exceed the space on the first column move to the second
       display.setCursor(64, rowCounter);
       display.println(message);
       display.display();
@@ -84,23 +84,45 @@ void handleGet() {
   if (server.hasArg("data")) {
     String data = server.arg("data");
     Serial.println("Data: " + data);
-    displayMessage (data);
 
-    //converts data received to int and moves motor
-    int degrees = data.toInt();
-    moveInDegrees(degrees);
-    //if data is a configuration text, change motor speed accordingly
-    if (data=="CONFIG3") {myStepper.setSpeed(3);};
-    if (data=="CONFIG5") {myStepper.setSpeed(5);};
-    if (data=="CONFIG10") {myStepper.setSpeed(10);};
-    //TODO: if data is invalid (for motor) print error message
+    if (data.toInt()==0){
+      
+        //if data is a configuration text, change motor speed accordingly
+        if (data =="CONFIG3"){
+          myStepper.setSpeed(3);
+          displayMessage("SLOW SPEED");
+          }
+        if (data =="CONFIG5"){
+          myStepper.setSpeed(5);
+          displayMessage("NORM SPEED");
+        }
+        if (data == "CONFIG10"){
+          myStepper.setSpeed(10);
+          displayMessage("FAST SPEED");
+        }
+        if (data== "TEST"){
+          displayMessage("TEST");
+          displayMessage("SUCCESS");
+          displayMessage("");
+        }
+      }
+      else{ 
+        displayMessage (data);
+        //converts data received to int and moves motor
+        int degrees = data.toInt();
+        moveInDegrees(degrees);
+      }
+    }
     
+    
+    
+    //TODO: decide if other data type has to be printed or not
+    server.send(200, "text/plain", "Data Received");
   }
 
-  //TODO: decide if other data type has to be printed or not
-  server.send(200, "text/plain", "Data Received");
+  
 
-}
+
 
 void handlePost() {
   server.send(200, "text/plain", "Processing Data");
