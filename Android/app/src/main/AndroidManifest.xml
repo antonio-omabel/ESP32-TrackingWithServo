@@ -37,16 +37,16 @@
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="com.amit.esp32_trackingwithservoapp.SettingsActivity" />
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".ApplicationActivity"
             android:exported="true"
-            android:screenOrientation="landscape">
+            android:screenOrientation="userLandscape">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="com.amit.esp32_trackingwithservoapp.ApplicationActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
