@@ -44,7 +44,7 @@
         <activity
             android:name=".ApplicationActivity"
             android:exported="true"
-            android:screenOrientation="userLandscape">
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="com.amit.esp32_trackingwithservoapp.ApplicationActivity" />
                 <category android:name="android.intent.category.DEFAULT" />

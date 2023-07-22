@@ -73,15 +73,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /*private void buttonStartHome() {
-        bttHome.setOnClickListener((v)->{
-            Log.i(TAG, "Home opening. Url: " + httpHandler.url);
-            Intent intent = getIntent();
-            intent.putExtra("URL", httpHandler.url);
-            finish();
-        });
-    }*/
-
     public void Init(){
         etIPpart1 =  findViewById(R.id.etIPPart1);
         etIPpart2 =  findViewById(R.id.etIPPart2);
@@ -107,5 +98,4 @@ public class MainActivity extends AppCompatActivity {
         String iP = "http://" + etIPpart1.getText().toString() + "." + etIPpart2.getText().toString() + "." + etIPpart3.getText().toString() + "." + etIPpart4.getText().toString() + "/get?data=";
         return iP;
     }
-
 }
