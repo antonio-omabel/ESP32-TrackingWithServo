@@ -90,7 +90,7 @@ void handleGet() {
     if (currentData!=data){
       currentData = data;
       if (data.toInt()==0)
-    {
+      {
       
         //if data is a configuration text, change motor speed accordingly
         if (data =="CONFIG3"){
@@ -125,15 +125,16 @@ void handleGet() {
           
         }
       }
-      else{ 
+      
+    
+    }
+    else{ 
         displayMessage (data);
         //converts data received to int and moves motor
         int degrees = data.toInt();
         moveInDegrees(degrees);
       }
       Serial.println("Data: " + data);
-    }
-    
     }
 
     
