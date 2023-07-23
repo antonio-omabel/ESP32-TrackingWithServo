@@ -32,7 +32,7 @@ public class MyOrientation implements SensorEventListener {
 
     public void start() {
         sensorManager.registerListener(this, orientation, SensorManager.SENSOR_STATUS_ACCURACY_HIGH);
-        sensorManager.registerListener(this, orientation, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(this, orientation, SensorManager.SENSOR_DELAY_UI);
     }
 
     public void stop() {

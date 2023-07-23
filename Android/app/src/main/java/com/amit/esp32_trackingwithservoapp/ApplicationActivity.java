@@ -246,22 +246,23 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
             long newTargetValue = targetValue + delta;
             long newActualValue = 0;
 
-            if (delta >0){
-                //applica la trasformazione anche al valore attuale
-                if (x + delta > 360) {
+        //if delta >0 the rotation of the system of measure has to be applied CW
+            if (delta >=0){
+                if (x + delta >= 360) {
                     newActualValue = (long) (x + delta - 360);
                 } else if (x + delta < 360) {
                     newActualValue = (long) (x + delta);
                 }
-            }else if (delta < 0) {
+            //if delta <0 the rotation of the system of measure has to be applied CCW
+            }else  {
                 if (x + delta < 0) {
                     //se il valore ritorna nel semicerchio sx correggiamo il val negativo
-                    newActualValue = (long)(360-x+delta);
+                    newActualValue = (long)(x+delta+360);
                 } else if (x + delta > 0){
                     newActualValue = (long)(x+delta);
                 }
             }
-            //controlla se il comando è partito
+            //don't issue other commands if it is already correcting
             if (!commandIssued) {
                 if (newActualValue < 175) {
                     //se (nel nuovo sistema di rif) il valore è < 180 dobbiamo ruotare CW
@@ -277,7 +278,6 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
             if (newActualValue <= 185 && newActualValue >= 175) {
                 httpHandler.httpRequest("STOP");
                 commandIssued = false;
-
             }
             orientationValue.setText("Current value:\n" + round(x) + "°\n" +
                     "Target value:\n" + targetValue + "°\n" + "Difference:\n" +
