@@ -63,6 +63,15 @@ public class MainActivity extends AppCompatActivity {
 
         buttonStartApplication();
         buttonStartManual();
+        buttonStartAbout();
+    }
+
+    private void buttonStartAbout() {
+        bttAbout.setOnClickListener(v -> {
+            Log.i(TAG, "Manual control opening. Url: " + httpHandler.url);
+            Intent intent = new Intent(MainActivity.this, AboutActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void buttonStartManual() {
