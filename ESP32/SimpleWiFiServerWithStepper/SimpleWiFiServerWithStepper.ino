@@ -31,7 +31,7 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET); //init
 int displayCounter = -1; //Used to reset display when full
 int rowCounter = 17; //Used to print to the second column correctly
 int movement = 0;
-int smallStep = 64;
+int smallStep = 4;
 String currentData;
 
 //Stepper initialization
