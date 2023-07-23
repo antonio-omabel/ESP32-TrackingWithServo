@@ -168,31 +168,42 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
             long newTargetValue = targetValue + delta;
             long newActualValue = 0;
 
+            if (delta >0){
             //applica la trasformazione anche al valore attuale
             if (x + delta > 360) {
                 newActualValue = (long) (x + delta - 360);
             } else if (x + delta < 360) {
                 newActualValue = (long) (x + delta);
             }
+            }else if (delta < 0) {
+                if (x + delta < 0) {
+                    //se il valore ritorna nel semicerchio sx correggiamo il val negativo
+                    newActualValue = (long)(360-x+delta);
+                } else if (x + delta > 0){
+                    newActualValue = (long)(x+delta);
+                }
+            }
 
 
 
             //controlla se il comando è partito
             if (!commandIssued) {
-                if (newActualValue < 170) {
+                if (newActualValue < 175) {
                     //se (nel nuovo sistema di rif) il valore è < 180 dobbiamo ruotare CW
                     httpHandler.httpRequest("CW");
                     commandIssued = true;
-                } else if (newActualValue > 190) {
+                } else if (newActualValue > 185) {
                     //se (nel nuovo sistema di rif) il valore è > 180 dobbiamo ruotare CCW
                     httpHandler.httpRequest("CCW");
                     commandIssued = true;
                 } else {
                     httpHandler.httpRequest("STOP");
+
+
                 }
             }
 
-            if (newActualValue < 190 && newActualValue > 170) {
+            if (newActualValue <= 185 && newActualValue >= 175) {
                 httpHandler.httpRequest("STOP");
                 commandIssued = false;
 
@@ -201,67 +212,6 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
                     "\nCurrent newvalue: \n" + round(newActualValue) + "°" + "\n"
                     + "\nDelta:" + round(delta) + "\n");
         }
-
-
-        /*
-        if (difference < -4) {
-            if (difference >= -180 && !clockwiseRotation) {
-                httpHandler.httpRequest("CW");
-                clockwiseRotation = true;
-                counterclockwiseRotation = false;
-                Log.i(TAG, "Clockwise positional adjustment");
-            }
-            else if(difference < -180 && !counterclockwiseRotation) {
-                httpHandler.httpRequest("CCW");
-                counterclockwiseRotation = true;
-                clockwiseRotation = false;
-                Log.i(TAG, "Counterclockwise positional adjustment");
-            }
-        }
-        else if (difference > 4) {
-            if (difference <= 180 && !counterclockwiseRotation) {
-                httpHandler.httpRequest("CCW");
-                counterclockwiseRotation = true;
-                clockwiseRotation = false;
-                Log.i(TAG, "Counterclockwise positional adjustment");
-            }
-            else if (difference > 180 && !clockwiseRotation) {
-                httpHandler.httpRequest("CW");
-                clockwiseRotation = true;
-                counterclockwiseRotation = false;
-                Log.i(TAG, "Clockwise positional adjustment");
-            }
-        }
-        else if (difference<4 && difference>-4){
-            httpHandler.httpRequest("STOP");
-            Log.i(TAG, "Rotation stop");
-        }
-        orientationValue.setText("Current value: \n" + round(x) + "°" + "\nTarget value:\n" + targetValue + "°");
-
-
-
-
-
-        /*else if(targetValue - x > 4) {
-            if ((targetValue - x >= 180)) {
-                httpHandler.httpRequest("-3");
-                Log.i(TAG, "Counterclockwise positional adjustment");
-            } else {
-                httpHandler.httpRequest("3");
-                Log.i(TAG, "Clockwise positional adjustment");
-              }
-            }
-        else if (targetValue - x < -4) {
-                if ((targetValue - x < -180)) {
-                    httpHandler.httpRequest("3");
-                    Log.i(TAG, "Clockwise positional adjustment");
-                }
-                else {
-                    httpHandler.httpRequest("-3");
-                    Log.i(TAG, "Counterclockwise positional adjustment");
-                }
-            }*/
-
     }
 }
 
