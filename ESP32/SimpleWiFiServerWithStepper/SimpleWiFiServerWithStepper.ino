@@ -11,8 +11,8 @@ WebServer server(80);
 
 const int stepsPerRevolution = 2048;  // change this to fit the number of steps per revolution
 
- const char* ssid     = "TIM-33003703";
- const char* password = "fgNG6QntXlZsyKF3MKQl21qJ";
+ const char* ssid     = "RedmiEma";
+ const char* password = "APPAMIT0";
 
 // ULN2003 Motor Driver Pins
 #define IN1 27
@@ -31,6 +31,7 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET); //init
 int displayCounter = -1; //Used to reset display when full
 int rowCounter = 17; //Used to print to the second column correctly
 int movement = 0;
+int smallStep = 64;
 String currentData;
 
 //Stepper initialization
@@ -110,11 +111,11 @@ void handleGet() {
           displayMessage("");
         }
         if (data== "CW"){
-          movement = 128;
+          movement = smallStep;
           displayMessage("CLOCKWISE");
         }
         if (data== "CCW"){
-          movement = -128;
+          movement = -smallStep;
           displayMessage("COUNTERCLO");
         }
         if (data== "STOP"){
