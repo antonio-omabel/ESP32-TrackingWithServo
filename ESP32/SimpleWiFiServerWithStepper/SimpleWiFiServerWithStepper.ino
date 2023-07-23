@@ -87,11 +87,22 @@ void handleGet() {
   if (server.hasArg("data")) {
     String data = server.arg("data");
 
+    //if the recived data is a number we roteate by that amount
+      if (data.toInt()!=0)
+      {
+        displayMessage (data);
+        //converts data received to int and moves motor
+        int degrees = data.toInt();
+        moveInDegrees(degrees);
+      }
+      Serial.println("Data: " + data);
+    
+
+    //if the data has changed in comparison to the one before and it is a string
     if (currentData!=data){
       currentData = data;
       if (data.toInt()==0)
       {
-      
         //if data is a configuration text, change motor speed accordingly
         if (data =="CONFIG3"){
           myStepper.setSpeed(3);
@@ -105,6 +116,7 @@ void handleGet() {
           myStepper.setSpeed(10);
           displayMessage("FAST SPEED");
         }
+        //Display successful connection
         if (data== "TEST"){
           displayMessage("TEST");
           displayMessage("SUCCESS");
@@ -122,35 +134,14 @@ void handleGet() {
           myStepper.step(0);
           movement = 0;
           displayMessage("STOP");
-          
         }
       }
-      
     
     }
-    else{ 
-        displayMessage (data);
-        //converts data received to int and moves motor
-        int degrees = data.toInt();
-        moveInDegrees(degrees);
-      }
-      Serial.println("Data: " + data);
-    }
-
-    
-
-    
-    
-    
-    
     //TODO: decide if other data type has to be printed or not
     server.send(200, "text/plain", "Data Received");
   }
-
-  
-
-
-
+}
 void handlePost() {
   server.send(200, "text/plain", "Processing Data");
 }
@@ -192,7 +183,6 @@ void setup()
     display.display();
 
     // We start by connecting to a WiFi network
-
     Serial.println();
     Serial.println();
     Serial.print("Connecting to ");
@@ -219,8 +209,6 @@ void setup()
       delay(100);
 
     }
-   
-    
     server.on("/", handleRoot);
     server.on("/get", HTTP_GET, handleGet);
     server.on("/post", HTTP_POST, handlePost, handleUpload);
@@ -233,7 +221,6 @@ void setup()
     display.setTextColor(WHITE);
     display.setCursor(0, 8);
     display.println(WiFi.localIP());
-    
     display.display(); 
 }
 
