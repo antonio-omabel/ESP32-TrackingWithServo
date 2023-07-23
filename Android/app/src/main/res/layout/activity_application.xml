@@ -15,6 +15,7 @@
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="5dp"
+        android:gravity="center"
         android:layout_weight="9">
 
         <LinearLayout
@@ -34,17 +35,40 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:textSize="20dp"
-                android:hint="Current value:\n\nTarget value:" />
+                android:hint="Current value:\n\nTarget value:"
+                android:textSize="20dp" />
         </LinearLayout>
 
-        <androidx.camera.view.PreviewView
-            android:id="@+id/view_finder"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="2">
 
-        </androidx.camera.view.PreviewView>
+            <androidx.camera.view.PreviewView
+                android:id="@+id/view_finder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+            </androidx.camera.view.PreviewView>
+
+            <ImageButton
+                android:id="@+id/bttShutter"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginRight="20dp"
+                android:scaleType="fitCenter"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@android:drawable/ic_notification_overlay"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 

@@ -2,26 +2,36 @@ package com.amit.esp32_trackingwithservoapp;
 
 import static java.lang.Math.round;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.Preview;
+import androidx.camera.core.VideoCapture;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 
+import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.amit.esp32_trackingwithservoapp.Interfaces.IMyOrientation;
 import com.amit.esp32_trackingwithservoapp.Sensor.MyOrientation;
 import com.google.common.util.concurrent.ListenableFuture;
+
+import org.jetbrains.annotations.Nullable;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -37,7 +47,7 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
 
     private PreviewView previewView;
     private Button bttStart = null, bttStop = null;
-    private ImageButton bttBack = null;
+    private ImageButton bttBack = null, bttShutter = null;
     private TextView orientationValue = null;
 
     private MyOrientation myOrientation = null;
@@ -50,11 +60,13 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
     private Boolean firstLoop = true;
     private Long targetValue = null;
     private int skipValue = 5;
+    private VideoCapture videoCapture;
 
 
     public ApplicationActivity() throws MalformedURLException, UnsupportedEncodingException {
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,12 +88,69 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
             httpHandler.httpRequest("STOP");
             firstLoop = true;
             Log.i(TAG, "Stop Orientation");
+            videoCapture.stopRecording();
+        });
+
+        bttShutter.setOnClickListener((v) -> {
+            try{
+            recordVideo();
+            Toast.makeText(ApplicationActivity.this, "Recording video.", Toast.LENGTH_SHORT).show();}
+            catch (Exception e){
+                Toast.makeText(ApplicationActivity.this,"Recording video failed.", Toast.LENGTH_SHORT).show();
+            }
         });
 
 
         buttonStartHome();
 
     }
+
+    @SuppressLint("RestrictedApi")
+    private void recordVideo() {
+        if (videoCapture != null) {
+
+            long timestamp = System.currentTimeMillis();
+
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, timestamp);
+            contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4");
+
+            try {
+
+                if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                videoCapture.startRecording(
+                        new VideoCapture.OutputFileOptions.Builder(
+                                getContentResolver(),
+                                MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                                contentValues
+                        ).build(),
+                        getExecutor(),
+                        new VideoCapture.OnVideoSavedCallback() {
+                            @Override
+                            public void onVideoSaved(@NonNull VideoCapture.OutputFileResults outputFileResults) {
+                                Toast.makeText(ApplicationActivity.this, "Video has been saved successfully.", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onError(int videoCaptureError, @NonNull String message, @Nullable Throwable cause) {
+                                Toast.makeText(ApplicationActivity.this, "Error saving video: " + message, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                );
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }}
 
     private void CameraStarter() {
         //CameraX initialization
@@ -125,12 +194,16 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
         Intent intent = getIntent();
         httpHandler.url = intent.getStringExtra("URL");
         Log.i(TAG, "Url from main: " + httpHandler.url);
+
+        bttShutter = findViewById(R.id.bttShutter);
+
     }
 
     private Executor getExecutor() {
         return ContextCompat.getMainExecutor(this);
     }
 
+    @SuppressLint("RestrictedApi")
     private void startCameraX(ProcessCameraProvider cameraProvider) {
         cameraProvider.unbindAll();
         //Cameraselector use case
@@ -144,8 +217,12 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
         imageCapture = new ImageCapture.Builder()
                 .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
                 .build();
+        // Video Capture use case
+        videoCapture = new VideoCapture.Builder()
+                        .setVideoFrameRate(30)
+                                .build();
 
-        cameraProvider.bindToLifecycle((LifecycleOwner) this, cameraSelector, preview, imageCapture);
+        cameraProvider.bindToLifecycle((LifecycleOwner) this, cameraSelector, preview, imageCapture, videoCapture);
 
     }
 
@@ -160,6 +237,7 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
             rotationHandler(x);
         }
     }
+    
 
     private void rotationHandler(double x){
             //calcola la differenza per ruotare l'obiettivo fino a 180
@@ -201,8 +279,8 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
                 commandIssued = false;
 
             }
-            orientationValue.setText("Current old value: \n" + round(x) + "°" + "\nold Target value:\n" + targetValue + "°" +
-                    "\nCurrent new value: \n" + round(newActualValue) + "°" + "\n"
-                    + "\nDelta:" + round(delta) + "\n");
+            orientationValue.setText("Current value:\n" + round(x) + "°\n" +
+                    "Target value:\n" + targetValue + "°\n" + "Difference:\n" +
+                    (targetValue-round(x)));
         }
     }

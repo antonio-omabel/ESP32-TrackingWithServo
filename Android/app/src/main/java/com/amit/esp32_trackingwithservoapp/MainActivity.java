@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG, "New IP Setted:" + httpHandler.url);
         });
         bttCheckIP.setOnClickListener(v -> {
-            httpHandler.httpRequest("Test");
+            httpHandler.httpRequest("TEST");
             Log.i(TAG, "Connection test sendend");
         });
         sbSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
