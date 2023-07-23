@@ -31,6 +31,10 @@ import java.util.concurrent.Executor;
 public class ApplicationActivity extends AppCompatActivity implements IMyOrientation {
     private final String TAG = "ApplicationActivity";
 
+    private Boolean commandIssued = false;
+
+    private Boolean isStopped = true;
+
     private PreviewView previewView;
     private Button bttStart = null, bttStop = null;
     private ImageButton bttBack = null;
@@ -60,12 +64,14 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
         Init();
         CameraStarter();
         bttStart.setOnClickListener((v)->{
+            isStopped = false;
             firstLoop = true;
             myOrientation.start();
             Log.i(TAG, "Start Orientation");
         });
 
         bttStop.setOnClickListener((v)->{
+            isStopped = false;
             myOrientation.stop();
             httpHandler.httpRequest("STOP");
             firstLoop = true;
@@ -145,52 +151,56 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
 
     @Override
     public void onNewOrientationValuesAvailable(double x) {
-        if (firstLoop) {
-            targetValue = round(x);
-            firstLoop = false;
-            Log.i(TAG, "The target value is: " + targetValue.toString());
-        }
+        if (!isStopped) {
 
-        int difference = (int) (targetValue - x);
 
-        //calcola la differeza per ruotare l'obiettivo fino a 180
-        long delta = 180 - targetValue;
-        // sets the new target to 180° (useless but explains the delta)
-        long newTargetValue = targetValue + delta;
-        long newActualValue = 0;
-
-        //applica la trasformazione anche al valore attuale
-        if (x + delta > 360){
-            newActualValue= (long) (x + delta -360);
-        }
-        else if (x + delta < 360) {
-            newActualValue = (long) (x + delta);
-        }
-
-        Boolean commandIssued = false;
-
-        //controlla se il comando è partito
-        if (!commandIssued){
-            if (newActualValue < 170) {
-                //se (nel nuovo sistema di rif) il valore è < 180 dobbiamo ruotare CW
-                httpHandler.httpRequest("CW");
-                commandIssued = true;
+            if (firstLoop) {
+                targetValue = round(x);
+                firstLoop = false;
+                Log.i(TAG, "The target value is: " + targetValue.toString());
             }
-            else if (newActualValue > 190){
-                //se (nel nuovo sistema di rif) il valore è > 180 dobbiamo ruotare CCW
-                httpHandler.httpRequest("CCW");
-                commandIssued = true;
+
+            //int difference = (int) (targetValue - x);
+
+            //calcola la differenza per ruotare l'obiettivo fino a 180
+            long delta = 180 - targetValue;
+            // sets the new target to 180° (useless but explains the delta)
+            long newTargetValue = targetValue + delta;
+            long newActualValue = 0;
+
+            //applica la trasformazione anche al valore attuale
+            if (x + delta > 360) {
+                newActualValue = (long) (x + delta - 360);
+            } else if (x + delta < 360) {
+                newActualValue = (long) (x + delta);
             }
-            else {httpHandler.httpRequest("STOP");}
-        }
 
-        if (newActualValue < 190 && newActualValue > 170){
-            httpHandler.httpRequest("STOP");
-            commandIssued = false;
 
+
+            //controlla se il comando è partito
+            if (!commandIssued) {
+                if (newActualValue < 170) {
+                    //se (nel nuovo sistema di rif) il valore è < 180 dobbiamo ruotare CW
+                    httpHandler.httpRequest("CW");
+                    commandIssued = true;
+                } else if (newActualValue > 190) {
+                    //se (nel nuovo sistema di rif) il valore è > 180 dobbiamo ruotare CCW
+                    httpHandler.httpRequest("CCW");
+                    commandIssued = true;
+                } else {
+                    httpHandler.httpRequest("STOP");
+                }
+            }
+
+            if (newActualValue < 190 && newActualValue > 170) {
+                httpHandler.httpRequest("STOP");
+                commandIssued = false;
+
+            }
+            orientationValue.setText("Current old value: \n" + round(x) + "°" + "\nold Target value:\n" + targetValue + "°" +
+                    "\nCurrent newvalue: \n" + round(newActualValue) + "°" + "\n"
+                    + "\nDelta:" + round(delta) + "\n");
         }
-        orientationValue.setText("Current value: \n" + round(x) + "°" + "\nTarget value:\n" + targetValue + "°" +
-                "\nCurrent newvalue: \n" + round(newActualValue) + "°" + "\nnew Target value:\n" + newTargetValue + "°");
 
 
         /*
