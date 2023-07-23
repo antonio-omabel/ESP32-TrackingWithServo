@@ -9,13 +9,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
     private final String TAG = "MainActivity";
-    private EditText etIP = null,etIPpart1 = null, etIPpart2=null,etIPpart3=null,etIPpart4=null, etDegrees=null;
+    private EditText etIP = null,etIPpart1 = null, etIPpart2=null,etIPpart3=null,etIPpart4=null;
     private TextView tvSpeed = null;
-
     public HttpHandler httpHandler = null;
     private Button bttSetIP = null, bttCheckIP = null, bttHome = null, bttManual = null, bttAbout = null;
 
@@ -29,15 +29,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Log.i(TAG, "onCreate");
         Init();
-
         bttSetIP.setOnClickListener(v -> {
-            httpHandler.url=getIP();
-            Log.i(TAG, "New IP Setted:" + httpHandler.url);
+                httpHandler.url = getIP();
+                Log.i(TAG, "IP setted:" + httpHandler.url);
+                Toast.makeText(this, "IP setted.", Toast.LENGTH_SHORT).show();
         });
+
         bttCheckIP.setOnClickListener(v -> {
             httpHandler.httpRequest("TEST");
             Log.i(TAG, "Connection test sendend");
         });
+
         sbSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {

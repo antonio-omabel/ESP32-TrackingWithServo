@@ -41,10 +41,7 @@ import java.util.concurrent.Executor;
 public class ApplicationActivity extends AppCompatActivity implements IMyOrientation {
     private final String TAG = "ApplicationActivity";
 
-    private Boolean commandIssued = false;
-
-    private Boolean isStopped = true;
-
+    private Boolean commandIssued = false, isStopped = true, firstLoop = true, isVideoRecording = false;
     private PreviewView previewView;
     private Button bttStart = null, bttStop = null;
     private ImageButton bttBack = null, bttShutter = null;
@@ -57,9 +54,7 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
 
     private String url = null;
     private HttpHandler httpHandler = null;
-    private Boolean firstLoop = true;
     private Long targetValue = null;
-    private int skipValue = 5;
     private VideoCapture videoCapture;
 
 
@@ -88,19 +83,22 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
             httpHandler.httpRequest("STOP");
             firstLoop = true;
             Log.i(TAG, "Stop Orientation");
-            videoCapture.stopRecording();
         });
 
         bttShutter.setOnClickListener((v) -> {
-            try{
-            recordVideo();
-            Toast.makeText(ApplicationActivity.this, "Recording video.", Toast.LENGTH_SHORT).show();}
-            catch (Exception e){
-                Toast.makeText(ApplicationActivity.this,"Recording video failed.", Toast.LENGTH_SHORT).show();
+            if(!isVideoRecording) {
+                try {
+                    recordVideo();
+                    isVideoRecording = true;
+                } catch (Exception e) {
+                    Toast.makeText(ApplicationActivity.this, "Recording video failed.", Toast.LENGTH_SHORT).show();
+                }
+            }
+            else{
+                videoCapture.stopRecording();
+                isVideoRecording = false;
             }
         });
-
-
         buttonStartHome();
 
     }
@@ -116,7 +114,6 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
             contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4");
 
             try {
-
                 if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling
                     //    ActivityCompat#requestPermissions
@@ -146,6 +143,7 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
                             }
                         }
                 );
+                Toast.makeText(ApplicationActivity.this, "Recording video.", Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 e.printStackTrace();
             }

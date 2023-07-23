@@ -3,5 +3,5 @@
     <string name="take_photo">ESP32-TrackingWithServoApp</string>
     <string name="URL">http://192.168.43.147/get?data=</string>
     <string name="URL1">http://192.168.1.125/get?data=</string>
-    <string name="hyperlink">GitHub repository link on\n<a href="https://github.com/antonio-omabel/ESP32-TrackingWithServo">GitHub</a></string>
+    <string name="hyperlink">Click <a href="https://github.com/antonio-omabel/ESP32-TrackingWithServo">here</a> for the GitHub repository link.\n</string>
 </resources>
