@@ -113,7 +113,7 @@ void handleGet() {
           displayMessage("NORM SPEED");
         }
         if (data == "CONFIG10"){
-          myStepper.setSpeed(10);
+          myStepper.setSpeed(8);
           displayMessage("FAST SPEED");
         }
         //Display successful connection
