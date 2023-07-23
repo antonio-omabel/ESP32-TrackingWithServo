@@ -8,11 +8,13 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
     private final String TAG = "MainActivity";
     private EditText etIP = null,etIPpart1 = null, etIPpart2=null,etIPpart3=null,etIPpart4=null, etDegrees=null;
+    private TextView tvSpeed = null;
 
     public HttpHandler httpHandler = null;
     private Button bttSetIP = null, bttCheckIP = null, bttHome = null, bttManual = null, bttAbout = null;
@@ -42,12 +44,15 @@ public class MainActivity extends AppCompatActivity {
                 switch (progress) {
                     case 0:
                         httpHandler.httpRequest("CONFIG3");
+                        tvSpeed.setText("Slow");
                         break;
                     case 1:
                         httpHandler.httpRequest("CONFIG5");
+                        tvSpeed.setText("Normal");
                         break;
                     case 2:
                         httpHandler.httpRequest("CONFIG10");
+                        tvSpeed.setText("Fast");
                         break;
                 }
             }
@@ -97,6 +102,8 @@ public class MainActivity extends AppCompatActivity {
         etIPpart2 =  findViewById(R.id.etIPPart2);
         etIPpart3 =  findViewById(R.id.etIPPart3);
         etIPpart4 =  findViewById(R.id.etIPPart4);
+
+        tvSpeed = findViewById(R.id.tvSpeed);
 
         bttCheckIP = findViewById(R.id.bttCheckIP);
         bttSetIP = findViewById(R.id.bttSetIP);

@@ -10,7 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_weight="3"
         android:orientation="horizontal">
 
         <ImageButton
@@ -38,7 +38,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4"
+        android:layout_weight="11"
         android:layout_marginTop="10dp"
         android:gravity="center"
         android:orientation="vertical">
@@ -49,15 +49,15 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="Rotate by an angle of your choice:"
-            android:textSize="16dp"/>
+            android:textSize="20dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2">
+            android:layout_weight="1.5">
 
             <Space
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3" />
 
@@ -70,7 +70,7 @@
                 android:text="90" />
 
             <Space
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3" />
 
@@ -79,7 +79,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="3"
+            android:layout_weight="2"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -116,9 +116,45 @@
         </LinearLayout>
 
         <View
+            android:id="@+id/view2"
             android:layout_width="match_parent"
             android:layout_height="7dp"
             android:background="?android:attr/listDivider" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="7dp"
+            android:background="?android:attr/listDivider" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Rotate towards the direction of your choice:"
+            android:textSize="18dp" />
+
+        <SeekBar
+            android:id="@+id/sbRotate"
+            style="@style/Widget.AppCompat.SeekBar.Discrete"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:max="6"
+            android:progress="3" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="7dp"
+            android:background="?android:attr/listDivider" />
+
 
     </LinearLayout>
 

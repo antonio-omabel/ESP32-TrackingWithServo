@@ -155,7 +155,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_weight="3"
         android:orientation="vertical"
         android:layout_marginHorizontal="15dp">
 
@@ -177,10 +177,19 @@
             android:max="2"
             android:progress="1" />
 
+        <TextView
+            android:id="@+id/tvSpeed"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:textSize="18dp"
+            android:text="Normal"
+            android:layout_marginBottom="15dp"
+            android:gravity="center"/>
+
     </LinearLayout>
 
     <View
-        android:id="@+id/divider3"
         android:layout_width="match_parent"
         android:layout_height="7dp"
         android:background="?android:attr/listDivider" />
@@ -194,15 +203,17 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginHorizontal="15dp"
-        android:layout_weight="3"
+        android:layout_weight="3.5"
         android:orientation="vertical">
 
         <Button
             android:id="@+id/bttHome"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:text="Start application"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            android:textStyle="bold"/>
 
         <LinearLayout
             android:layout_width="match_parent"
