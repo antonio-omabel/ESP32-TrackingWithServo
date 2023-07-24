@@ -1,8 +1,6 @@
 package com.amit.esp32_trackingwithservoapp;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;

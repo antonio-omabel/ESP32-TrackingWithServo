@@ -30,14 +30,25 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "onCreate");
         Init();
         bttSetIP.setOnClickListener(v -> {
+            try{
                 httpHandler.url = getIP();
-                Log.i(TAG, "IP setted:" + httpHandler.url);
-                Toast.makeText(this, "IP setted.", Toast.LENGTH_SHORT).show();
+                Log.i(TAG, "IP set:" + httpHandler.url);
+                Toast.makeText(this, "IP set.", Toast.LENGTH_SHORT).show();}
+            catch(Exception e){
+                Log.i(TAG, "IP not set:" + httpHandler.url);
+                Toast.makeText(this, "IP not set.", Toast.LENGTH_SHORT).show();
+            }
         });
 
         bttCheckIP.setOnClickListener(v -> {
-            httpHandler.httpRequest("TEST");
-            Log.i(TAG, "Connection test sendend");
+            try{
+                httpHandler.httpRequest("TEST");
+                Log.i(TAG, "Connection test sent");
+                Toast.makeText(this, "Connection test sent.", Toast.LENGTH_SHORT).show();}
+            catch (Exception e){
+                Log.i(TAG, "Connection test not sent");
+                Toast.makeText(this, "Connection test not sent.", Toast.LENGTH_SHORT).show();
+            }
         });
 
         sbSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -65,8 +76,6 @@ public class MainActivity extends AppCompatActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
-
-
 
         buttonStartApplication();
         buttonStartManual();

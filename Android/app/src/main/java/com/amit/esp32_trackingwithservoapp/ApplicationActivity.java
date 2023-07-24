@@ -33,8 +33,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 import org.jetbrains.annotations.Nullable;
 
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 
@@ -55,11 +53,8 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
     private String url = null;
     private HttpHandler httpHandler = null;
     private Long targetValue = null;
+    private int tollerance = 5;
     private VideoCapture videoCapture;
-
-
-    public ApplicationActivity() throws MalformedURLException, UnsupportedEncodingException {
-    }
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -169,9 +164,10 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
         bttBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i(TAG, "Home opening");
+                isStopped = true;
                 myOrientation.stop();
                 httpHandler.httpRequest("STOP");
+                Log.i(TAG, "Home opening");
                 finish();
             }
         });
@@ -238,7 +234,7 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
     
 
     private void rotationHandler(double x){
-            //calcola la differenza per ruotare l'obiettivo fino a 180
+            //Calculate the difference to shift the target to 180°
             long delta = 180 - targetValue;
             // sets the new target to 180° (useless but explains the delta)
             long newTargetValue = targetValue + delta;
@@ -254,7 +250,7 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
             //if delta <0 the rotation of the system of measure has to be applied CCW
             }else  {
                 if (x + delta < 0) {
-                    //se il valore ritorna nel semicerchio sx correggiamo il val negativo
+                    //if value < 0 ==> correct the negative value
                     newActualValue = (long)(x+delta+360);
                 } else if (x + delta > 0){
                     newActualValue = (long)(x+delta);
@@ -262,18 +258,18 @@ public class ApplicationActivity extends AppCompatActivity implements IMyOrienta
             }
             //don't issue other commands if it is already correcting
             if (!commandIssued) {
-                if (newActualValue < 175) {
-                    //se (nel nuovo sistema di rif) il valore è < 180 dobbiamo ruotare CW
+                if (newActualValue < (180 - tollerance)) {
+                    //if (in the new measurement system) value < 180°-tollerance ==> rotate CW
                     httpHandler.httpRequest("CW");
                     commandIssued = true;
                 }
-                else if (newActualValue > 185) {
-                    //se (nel nuovo sistema di rif) il valore è > 180 dobbiamo ruotare CCW
+                else if (newActualValue > (180 + tollerance)) {
+                    //if (in the new measurement system) value > 180° ==> rotate CCW
                     httpHandler.httpRequest("CCW");
                     commandIssued = true;
                 }
             }
-            if (newActualValue <= 185 && newActualValue >= 175) {
+            if (newActualValue <= (180 + tollerance) && newActualValue >= (180 - tollerance)) {
                 httpHandler.httpRequest("STOP");
                 commandIssued = false;
             }
