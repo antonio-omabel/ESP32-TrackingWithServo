@@ -5,10 +5,19 @@ ESP32-TrackingWithServo is a project designed to create a one-axis stabilization
 
 ## Purpose
 
-The primary goal of this project is to develop a simple and effective stabilization mechanism using affordable and widely available components. This can be useful in applications such as:
+The primary goal of this project is to develop an android application that realized simple stabilization mechanism using data from a sensor and issuing commands to a microcontroller. This may be useful in applications such as:
 - Robotics
 - Photography and videography
 - Experimental setups requiring steady objects
+
+But it was really just a uni project to develop a simple android app and experiment IoT communication
+
+## Video Demo
+
+[![Video](https://img.youtube.com/vi/0G1of4TYZfs/0.jpg)](https://www.youtube.com/watch?v=0G1of4TYZfs)
+
+
+
 
 ## Schematic 
 ![System](docs/assets/1.png)
@@ -54,10 +63,8 @@ This project is licensed under the [MIT License](LICENSE).
 ## Contributors
 
 - [![antonio-omabel](https://avatars.githubusercontent.com/u/100868230?v=4&s=40)](https://github.com/antonio-omabel) **[antonio-omabel](https://github.com/antonio-omabel)**  
-  Contributions: 28 commits
 
 - [![castagnoemanuele](https://avatars.githubusercontent.com/u/100867215?v=4&s=40)](https://github.com/castagnoemanuele) **[castagnoemanuele](https://github.com/castagnoemanuele)**  
-  Contributions: 44 commits
 
 
 ## Acknowledgments
