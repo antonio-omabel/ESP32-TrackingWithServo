@@ -51,6 +51,15 @@ The primary goal of this project is to develop a simple and effective stabilizat
 
 This project is licensed under the [MIT License](LICENSE).
 
+## Contributors
+
+- [![antonio-omabel](https://avatars.githubusercontent.com/u/100868230?v=4&s=40)](https://github.com/antonio-omabel) **[antonio-omabel](https://github.com/antonio-omabel)**  
+  Contributions: 28 commits
+
+- [![castagnoemanuele](https://avatars.githubusercontent.com/u/100867215?v=4&s=40)](https://github.com/castagnoemanuele) **[castagnoemanuele](https://github.com/castagnoemanuele)**  
+  Contributions: 44 commits
+
+
 ## Acknowledgments
 
 - Inspired by various DIY stabilization projects.
